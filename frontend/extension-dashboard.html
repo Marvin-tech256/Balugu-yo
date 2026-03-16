@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Extension Officer — Balugu Yo</title>
+  <link rel="stylesheet" href="css/style.css"/>
+  <style>
+    .page-header {
+      background: linear-gradient(135deg, #00695C, #00897B);
+      padding: 20px 24px 48px;
+      color: white;
+    }
+
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .header-brand {
+      font-family: 'Poppins', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .header-brand span { color: #A5D6A7; }
+
+    .header-user {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .avatar-teal {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.25);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 15px;
+    }
+
+    .header-greeting {
+      font-size: 13px;
+      color: rgba(255,255,255,0.85);
+    }
+
+    /* Stats row */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .stat-card {
+      background: white;
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .stat-icon-wrap {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+
+    .bg-green  { background: #E8F5E9; }
+    .bg-teal   { background: #E0F2F1; }
+    .bg-amber  { background: #FFF8E1; }
+    .bg-blue   { background: #E3F2FD; }
+
+    .stat-info {}
+
+    .stat-value {
+      font-family: 'Poppins', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--text-gray);
+      margin-top: 2px;
+    }
+
+    /* Content area */
+    .content-area {
+      background: var(--bg);
+      border-radius: 20px 20px 0 0;
+      margin-top: -24px;
+      padding: 24px 20px 100px;
+      min-height: calc(100vh - 140px);
+    }
+
+    /* Section header */
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .section-header h3 {
+      font-size: 16px;
+      color: var(--text);
+    }
+
+    /* Search bar */
+    .search-bar {
+      position: relative;
+      margin-bottom: 16px;
+    }
+
+    .search-bar input {
+      width: 100%;
+      padding: 12px 16px 12px 44px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 14px;
+      outline: none;
+      font-family: 'Inter', sans-serif;
+      background: white;
+      transition: border-color 0.2s;
+    }
+
+    .search-bar input:focus {
+      border-color: var(--accent);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 18px;
+    }
+
+    /* Farmer cards */
+    .farmer-card {
+      background: white;
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: var(--shadow);
+      margin-bottom: 12px;
+      border-left: 4px solid var(--accent);
+    }
+
+    .farmer-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 10px;
+    }
+
+    .farmer-info {}
+
+    .farmer-name {
+      font-family: 'Poppins', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 3px;
+    }
+
+    .farmer-meta {
+      font-size: 12px;
+      color: var(--text-gray);
+    }
+
+    .farmer-card-body {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .farmer-stat {
+      background: var(--bg);
+      border-radius: 8px;
+      padding: 8px;
+      text-align: center;
+    }
+
+    .farmer-stat-value {
+      font-family: 'Poppins', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .farmer-stat-label {
+      font-size: 10px;
+      color: var(--text-gray);
+      margin-top: 2px;
+    }
+
+    .farmer-card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 10px;
+      border-top: 1px solid var(--border);
+    }
+
+    .harvest-tag {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    .contact-btn {
+      padding: 6px 14px;
+      border-radius: 20px;
+      background: #E0F2F1;
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    /* District filter */
+    .district-filter {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      margin-bottom: 16px;
+      padding-bottom: 4px;
+    }
+
+    .district-filter::-webkit-scrollbar { display: none; }
+
+    .d-chip {
+      padding: 7px 14px;
+      border-radius: 20px;
+      border: 1.5px solid var(--border);
+      background: white;
+      color: var(--text-gray);
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      white-space: nowrap;
+      font-family: 'Inter', sans-serif;
+      transition: all 0.2s;
+    }
+
+    .d-chip.active {
+      border-color: var(--accent);
+      background: #E0F2F1;
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    /* Summary banner */
+    .alert-banner {
+      background: #FFF8E1;
+      border: 1px solid var(--amber);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .alert-banner-icon { font-size: 24px; }
+
+    .alert-banner-text {
+      font-size: 13px;
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    .alert-banner-text strong { color: #F57F17; }
+
+    /* Logout */
+    .logout-row {
+      text-align: center;
+      padding: 20px 0;
+    }
+
+    .logout-row button {
+      background: none;
+      border: 1px solid var(--border);
+      padding: 10px 24px;
+      border-radius: 20px;
+      color: var(--text-gray);
+      font-size: 13px;
+      cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="page-header">
+    <div class="header-top">
+      <div class="header-brand">Balugu <span>Yo</span></div>
+      <div class="header-user">
+        <div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.7);
+                      text-align:right">Extension Officer</div>
+          <div class="header-greeting" id="officerName">Loading...</div>
+        </div>
+        <div class="avatar-teal" id="officerAvatar">E</div>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon-wrap bg-green">👨‍🌾</div>
+        <div class="stat-info">
+          <div class="stat-value" id="totalFarmers">0</div>
+          <div class="stat-label">Total Farmers</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon-wrap bg-amber">🌾</div>
+        <div class="stat-info">
+          <div class="stat-value" id="harvestingSoon">0</div>
+          <div class="stat-label">Harvesting Soon</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon-wrap bg-teal">🌱</div>
+        <div class="stat-info">
+          <div class="stat-value" id="totalFarms">0</div>
+          <div class="stat-label">Total Farms</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon-wrap bg-blue">📊</div>
+        <div class="stat-info">
+          <div class="stat-value" id="avgAccuracy">87%</div>
+          <div class="stat-label">Avg Accuracy</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="content-area">
+    <div style="max-width:700px;margin:0 auto">
+
+      <!-- Alert banner -->
+      <div class="alert-banner" id="alertBanner" style="display:none">
+        <div class="alert-banner-icon">⚠️</div>
+        <div class="alert-banner-text">
+          <strong id="bannerCount">0 farmers</strong>
+          <span id="bannerText"> have harvests due within 30 days.
+            Consider scheduling field visits.</span>
+        </div>
+      </div>
+
+      <!-- Search -->
+      <div class="search-bar">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="searchInput"
+               placeholder="Search farmers by name or district..."
+               oninput="filterFarmers()"/>
+      </div>
+
+      <!-- District filter -->
+      <div class="district-filter" id="districtFilter">
+        <div class="d-chip active" onclick="filterByDistrict('all', this)">
+          All Districts
+        </div>
+      </div>
+
+      <!-- Section header -->
+      <div class="section-header">
+        <h3>Farmers in Your Area</h3>
+        <span id="farmerCount"
+              style="font-size:13px;color:var(--text-gray)">
+          0 farmers
+        </span>
+      </div>
+
+      <!-- Farmers list -->
+      <div id="farmersList">
+        <div class="empty-state">
+          <div class="empty-icon">👨‍🌾</div>
+          <h3>Loading farmers...</h3>
+        </div>
+      </div>
+
+      <!-- Logout -->
+      <div class="logout-row">
+        <button onclick="logout()">🚪 Logout</button>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="js/auth.js"></script>
+  <script>
+    requireAuth();
+
+    const user = getUser();
+    if (user.role === 'farmer') {
+      window.location.href = 'dashboard.html';
+    }
+
+    document.getElementById('officerName').textContent =
+      user.full_name.split(' ')[0];
+    document.getElementById('officerAvatar').textContent =
+      user.full_name.charAt(0).toUpperCase();
+
+    let allFarmers = [];
+    let currentDistrict = 'all';
+
+    async function loadData() {
+      try {
+        const data = await apiCall('/farms/all');
+        if (!data.success) return;
+
+        // Build unique farmers
+        const farmerMap = {};
+        data.farms.forEach(f => {
+          if (!farmerMap[f.user_id]) {
+            farmerMap[f.user_id] = {
+              user_id: f.user_id,
+              full_name: f.full_name,
+              phone: f.phone,
+              district: f.user_district,
+              farms: [],
+              total_acres: 0,
+              harvest_soon: 0
+            };
+          }
+          farmerMap[f.user_id].farms.push(f);
+          farmerMap[f.user_id].total_acres +=
+            parseFloat(f.size_acres || 0);
+          if (f.days_remaining &&
+              f.days_remaining <= 30 &&
+              f.days_remaining > 0) {
+            farmerMap[f.user_id].harvest_soon++;
+          }
+        });
+
+        allFarmers = Object.values(farmerMap);
+
+        // Update stats
+        document.getElementById('totalFarmers').textContent =
+          allFarmers.length;
+        document.getElementById('totalFarms').textContent =
+          data.farms.length;
+        const soon = allFarmers.filter(f =>
+          f.harvest_soon > 0).length;
+        document.getElementById('harvestingSoon').textContent = soon;
+
+        // Show alert banner
+        if (soon > 0) {
+          document.getElementById('alertBanner').style.display = 'flex';
+          document.getElementById('bannerCount').textContent =
+            `${soon} farmer${soon > 1 ? 's' : ''}`;
+        }
+
+        // Build district chips
+        const districts = [...new Set(
+          allFarmers.map(f => f.district).filter(Boolean)
+        )];
+        const filter = document.getElementById('districtFilter');
+        districts.forEach(d => {
+          const chip = document.createElement('div');
+          chip.className = 'd-chip';
+          chip.textContent = d;
+          chip.onclick = () => filterByDistrict(d, chip);
+          filter.appendChild(chip);
+        });
+
+        renderFarmers(allFarmers);
+
+      } catch (err) {
+        console.error('Load error:', err);
+      }
+    }
+
+    function filterByDistrict(district, el) {
+      currentDistrict = district;
+      document.querySelectorAll('.d-chip').forEach(c =>
+        c.classList.remove('active'));
+      el.classList.add('active');
+
+      const q = document.getElementById('searchInput').value.toLowerCase();
+      applyFilters(q, district);
+    }
+
+    function filterFarmers() {
+      const q = document.getElementById('searchInput').value.toLowerCase();
+      applyFilters(q, currentDistrict);
+    }
+
+    function applyFilters(q, district) {
+      let filtered = allFarmers;
+      if (district !== 'all') {
+        filtered = filtered.filter(f => f.district === district);
+      }
+      if (q) {
+        filtered = filtered.filter(f =>
+          f.full_name.toLowerCase().includes(q) ||
+          (f.district || '').toLowerCase().includes(q)
+        );
+      }
+      renderFarmers(filtered);
+    }
+
+    function renderFarmers(farmers) {
+      const list = document.getElementById('farmersList');
+      document.getElementById('farmerCount').textContent =
+        `${farmers.length} farmer${farmers.length !== 1 ? 's' : ''}`;
+
+      if (!farmers.length) {
+        list.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">👨‍🌾</div>
+            <h3>No farmers found</h3>
+            <p>Try a different search or district filter</p>
+          </div>`;
+        return;
+      }
+
+      list.innerHTML = farmers.map(f => {
+        const nearestHarvest = f.farms
+          .filter(fm => fm.days_remaining > 0)
+          .sort((a, b) => a.days_remaining - b.days_remaining)[0];
+
+        return `
+          <div class="farmer-card">
+            <div class="farmer-card-top">
+              <div class="farmer-info">
+                <div class="farmer-name">👨‍🌾 ${f.full_name}</div>
+                <div class="farmer-meta">
+                  📍 ${f.district || 'Unknown'} •
+                  📞 ${f.phone}
+                </div>
+              </div>
+              <span class="badge ${
+                f.harvest_soon > 0
+                  ? 'badge-soon' : 'badge-growing'
+              }">
+                ${f.harvest_soon > 0 ? 'Harvest Soon' : 'Growing'}
+              </span>
+            </div>
+
+            <div class="farmer-card-body">
+              <div class="farmer-stat">
+                <div class="farmer-stat-value">${f.farms.length}</div>
+                <div class="farmer-stat-label">Farms</div>
+              </div>
+              <div class="farmer-stat">
+                <div class="farmer-stat-value">
+                  ${f.total_acres.toFixed(1)}
+                </div>
+                <div class="farmer-stat-label">Acres</div>
+              </div>
+              <div class="farmer-stat">
+                <div class="farmer-stat-value">${f.harvest_soon}</div>
+                <div class="farmer-stat-label">Due Soon</div>
+              </div>
+            </div>
+
+            <div class="farmer-card-footer">
+              <div class="harvest-tag">
+                ${nearestHarvest
+                  ? `🗓 Next harvest in ${nearestHarvest.days_remaining} days`
+                  : '🌱 No active planting'}
+              </div>
+              <button class="contact-btn"
+                onclick="window.location.href='tel:${f.phone}'">
+                📞 Call
+              </button>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    loadData();
+  </script>
+
+</body>
+</html>

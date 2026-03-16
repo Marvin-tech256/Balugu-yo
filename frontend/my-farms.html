@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Farms — Balugu Yo</title>
+  <link rel="stylesheet" href="css/style.css"/>
+  <style>
+    .page-header {
+      background: linear-gradient(135deg, #1B5E20, #2E7D32);
+      padding: 20px 24px;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .page-header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .back-btn {
+      background: rgba(255,255,255,0.2);
+      border: none;
+      color: white;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      font-size: 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .page-header h1 { font-size: 20px; color: white; }
+
+    .add-btn {
+      background: rgba(255,255,255,0.2);
+      border: 1px solid rgba(255,255,255,0.4);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .content-area {
+      background: white;
+      border-radius: 20px 20px 0 0;
+      margin-top: -12px;
+      padding: 24px 20px 100px;
+      min-height: calc(100vh - 80px);
+    }
+
+    /* Search bar */
+    .search-bar {
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    .search-bar input {
+      width: 100%;
+      padding: 13px 16px 13px 44px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 14px;
+      outline: none;
+      font-family: 'Inter', sans-serif;
+      transition: border-color 0.2s;
+    }
+
+    .search-bar input:focus {
+      border-color: var(--primary);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 18px;
+    }
+
+    /* Farm cards */
+    .farm-card {
+      background: white;
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: var(--shadow);
+      margin-bottom: 14px;
+      border-left: 4px solid var(--primary);
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .farm-card:hover { transform: translateY(-2px); }
+
+    .farm-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+
+    .farm-card-name {
+      font-family: 'Poppins', sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .farm-card-location {
+      font-size: 13px;
+      color: var(--text-gray);
+    }
+
+    .farm-card-meta {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: var(--text-gray);
+    }
+
+    .meta-item strong { color: var(--text); }
+
+    .farm-card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+
+    .harvest-info {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    .farm-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .farm-action-btn {
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .btn-plant {
+      background: #E8F5E9;
+      color: var(--primary);
+    }
+
+    .btn-delete {
+      background: #FFEBEE;
+      color: #C62828;
+    }
+
+    /* Add farm modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 200;
+      align-items: flex-end;
+      justify-content: center;
+    }
+
+    .modal-overlay.show {
+      display: flex;
+    }
+
+    .modal {
+      background: white;
+      border-radius: 24px 24px 0 0;
+      padding: 28px 24px 40px;
+      width: 100%;
+      max-width: 480px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .modal-header h3 {
+      font-size: 18px;
+      color: var(--text);
+    }
+
+    .modal-close {
+      background: var(--bg);
+      border: none;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      font-size: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .chip-group {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .chip {
+      padding: 10px 18px;
+      border-radius: 20px;
+      border: 2px solid var(--border);
+      background: white;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .chip.selected {
+      border-color: var(--primary);
+      background: #E8F5E9;
+      color: var(--primary);
+    }
+
+    /* Stats summary */
+    .farms-summary {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .summary-card {
+      background: var(--bg);
+      border-radius: var(--radius);
+      padding: 14px 10px;
+      text-align: center;
+    }
+
+    .summary-value {
+      font-family: 'Poppins', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .summary-label {
+      font-size: 11px;
+      color: var(--text-gray);
+      margin-top: 2px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="page-header">
+    <div class="page-header-left">
+      <button class="back-btn" onclick="history.back()">←</button>
+      <h1>My Farms</h1>
+    </div>
+    <button class="add-btn" onclick="openModal()">+ Add Farm</button>
+  </div>
+
+  <div class="app-layout">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="sidebar-logo">Balugu <span>Yo</span></div>
+      <nav class="sidebar-nav">
+        <a href="dashboard.html">
+          <span class="nav-icon">🏠</span> Dashboard
+        </a>
+        <a href="my-farms.html" class="active">
+          <span class="nav-icon">🌾</span> My Farms
+        </a>
+        <a href="add-planting.html">
+          <span class="nav-icon">🌱</span> Add Planting
+        </a>
+        <a href="weather.html">
+          <span class="nav-icon">🌧️</span> Weather
+        </a>
+        <a href="alerts.html">
+          <span class="nav-icon">🔔</span> Alerts
+        </a>
+      </nav>
+      <div style="padding:20px;border-top:1px solid rgba(255,255,255,0.1)">
+        <a href="#" onclick="logout()"
+           style="color:rgba(255,255,255,0.6);font-size:13px">
+          🚪 Logout
+        </a>
+      </div>
+    </div>
+
+    <div class="main-content">
+      <div class="content-area" style="max-width:600px;margin:0 auto">
+
+        <!-- Summary -->
+        <div class="farms-summary">
+          <div class="summary-card">
+            <div class="summary-value" id="totalFarmsCount">0</div>
+            <div class="summary-label">Total Farms</div>
+          </div>
+          <div class="summary-card">
+            <div class="summary-value" id="totalAcres">0</div>
+            <div class="summary-label">Total Acres</div>
+          </div>
+          <div class="summary-card">
+            <div class="summary-value" id="harvestingSoon">0</div>
+            <div class="summary-label">Harvest Soon</div>
+          </div>
+        </div>
+
+        <!-- Search -->
+        <div class="search-bar">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="searchInput"
+                 placeholder="Search farms..."
+                 oninput="filterFarms()"/>
+        </div>
+
+        <!-- Farms List -->
+        <div id="farmsList">
+          <div class="empty-state">
+            <div class="empty-icon">🌾</div>
+            <h3>No farms yet</h3>
+            <p>Add your first farm to get started</p>
+            <button class="btn btn-primary"
+                    style="max-width:200px;margin:16px auto 0"
+                    onclick="openModal()">
+              Add Farm
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Nav -->
+  <nav class="bottom-nav">
+    <a href="dashboard.html">
+      <span class="nav-icon">🏠</span> Home
+    </a>
+    <a href="my-farms.html" class="active">
+      <span class="nav-icon">🌾</span> Farms
+    </a>
+    <a href="add-planting.html">
+      <span class="nav-icon">🌱</span> Plant
+    </a>
+    <a href="weather.html">
+      <span class="nav-icon">🌧️</span> Weather
+    </a>
+    <a href="alerts.html">
+      <span class="nav-icon">🔔</span> Alerts
+    </a>
+  </nav>
+
+  <!-- ADD FARM MODAL -->
+  <div class="modal-overlay" id="modalOverlay"
+       onclick="handleOverlayClick(event)">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>🌾 Add New Farm</h3>
+        <button class="modal-close" onclick="closeModal()">✕</button>
+      </div>
+
+      <div class="form-group">
+        <label>Farm Name</label>
+        <input type="text" class="form-control" id="farm_name"
+               placeholder="e.g. Bukunja Plot A"/>
+      </div>
+
+      <div class="form-group">
+        <label>District</label>
+        <select class="form-control" id="m_district">
+          <option value="">Select district</option>
+          <option value="Buikwe">Buikwe</option>
+          <option value="Bukunja">Bukunja</option>
+          <option value="Mukono">Mukono</option>
+          <option value="Kampala">Kampala</option>
+          <option value="Jinja">Jinja</option>
+          <option value="Mbale">Mbale</option>
+          <option value="Masaka">Masaka</option>
+          <option value="Mbarara">Mbarara</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Village / Area</label>
+        <input type="text" class="form-control" id="m_location"
+               placeholder="e.g. Bukunja Village"/>
+      </div>
+
+      <div class="form-group">
+        <label>Farm Size (acres)</label>
+        <input type="number" class="form-control" id="m_size"
+               placeholder="e.g. 2.5" step="0.1" min="0.1"/>
+      </div>
+
+      <div class="form-group">
+        <label>Soil Type</label>
+        <div class="chip-group">
+          <div class="chip selected"
+               onclick="selectModalSoil('loam', this)">🟤 Loam</div>
+          <div class="chip"
+               onclick="selectModalSoil('clay', this)">🔴 Clay</div>
+          <div class="chip"
+               onclick="selectModalSoil('sandy', this)">🟡 Sandy</div>
+        </div>
+        <input type="hidden" id="m_soil" value="loam"/>
+      </div>
+
+      <button class="btn btn-primary" id="addFarmBtn"
+              onclick="handleAddFarm()">
+        🌾 Add Farm
+      </button>
+    </div>
+  </div>
+
+  <script src="js/auth.js"></script>
+  <script>
+    requireAuth();
+    let allFarms = [];
+
+    async function loadFarms() {
+      const data = await apiCall('/farms/my');
+      if (!data.success) return;
+
+      // Deduplicate by farm_id
+      const seen = new Set();
+      allFarms = [];
+      data.farms.forEach(f => {
+        if (!seen.has(f.farm_id)) {
+          seen.add(f.farm_id);
+          allFarms.push(f);
+        }
+      });
+
+      // Update summary
+      document.getElementById('totalFarmsCount').textContent = allFarms.length;
+      const acres = allFarms.reduce((s, f) =>
+        s + parseFloat(f.size_acres || 0), 0);
+      document.getElementById('totalAcres').textContent =
+        acres.toFixed(1);
+      const soon = allFarms.filter(f =>
+        f.days_remaining && f.days_remaining <= 30 &&
+        f.days_remaining > 0).length;
+      document.getElementById('harvestingSoon').textContent = soon;
+
+      renderFarms(allFarms);
+    }
+
+    function renderFarms(farms) {
+      const list = document.getElementById('farmsList');
+      if (!farms.length) {
+        list.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">🌾</div>
+            <h3>No farms found</h3>
+            <p>Try a different search or add a new farm</p>
+          </div>`;
+        return;
+      }
+
+      list.innerHTML = farms.map(f => `
+        <div class="farm-card">
+          <div class="farm-card-top">
+            <div>
+              <div class="farm-card-name">🌾 ${f.farm_name}</div>
+              <div class="farm-card-location">
+                📍 ${f.location || ''} ${f.district}
+              </div>
+            </div>
+            <span class="badge ${
+              f.days_remaining <= 30 && f.days_remaining > 0
+                ? 'badge-soon'
+                : 'badge-growing'
+            }">
+              ${f.days_remaining <= 30 && f.days_remaining > 0
+                ? 'Harvest Soon'
+                : 'Growing'}
+            </span>
+          </div>
+
+          <div class="farm-card-meta">
+            <div class="meta-item">
+              📐 <strong>${f.size_acres || '—'}</strong> acres
+            </div>
+            <div class="meta-item">
+              🧱 <strong>${f.soil_type || '—'}</strong> soil
+            </div>
+            <div class="meta-item">
+              🌿 <strong>${f.yam_variety || 'Not planted'}</strong>
+            </div>
+          </div>
+
+          <div class="farm-card-footer">
+            <div class="harvest-info">
+              ${f.predicted_harvest_date
+                ? `🗓 Harvest: ${f.predicted_harvest_date} (${f.days_remaining} days)`
+                : '🌱 No planting recorded'}
+            </div>
+            <div class="farm-actions">
+              <button class="farm-action-btn btn-plant"
+                onclick="plantOnFarm(${f.farm_id})">
+                + Plant
+              </button>
+              <button class="farm-action-btn btn-delete"
+                onclick="deleteFarm(${f.farm_id}, '${f.farm_name}')">
+                🗑
+              </button>
+            </div>
+          </div>
+        </div>`).join('');
+    }
+
+    function filterFarms() {
+      const q = document.getElementById('searchInput').value.toLowerCase();
+      const filtered = allFarms.filter(f =>
+        f.farm_name.toLowerCase().includes(q) ||
+        f.district.toLowerCase().includes(q) ||
+        (f.location || '').toLowerCase().includes(q)
+      );
+      renderFarms(filtered);
+    }
+
+    function plantOnFarm(farmId) {
+      window.location.href = `add-planting.html?farm_id=${farmId}`;
+    }
+
+    async function deleteFarm(farmId, farmName) {
+      if (!confirm(`Delete "${farmName}"? This cannot be undone.`)) return;
+      const data = await apiCall(`/farms/${farmId}`, 'DELETE');
+      if (data.success) {
+        showToast('Farm deleted');
+        loadFarms();
+      } else {
+        showToast(data.message || 'Failed to delete', 'error');
+      }
+    }
+
+    // Modal
+    function openModal() {
+      document.getElementById('modalOverlay').classList.add('show');
+    }
+
+    function closeModal() {
+      document.getElementById('modalOverlay').classList.remove('show');
+    }
+
+    function handleOverlayClick(e) {
+      if (e.target === document.getElementById('modalOverlay')) closeModal();
+    }
+
+    function selectModalSoil(type, el) {
+      document.getElementById('m_soil').value = type;
+      document.querySelectorAll('.chip').forEach(c =>
+        c.classList.remove('selected'));
+      el.classList.add('selected');
+    }
+
+    async function handleAddFarm() {
+      const farm_name = document.getElementById('farm_name').value.trim();
+      const district = document.getElementById('m_district').value;
+      const location = document.getElementById('m_location').value.trim();
+      const size_acres = document.getElementById('m_size').value;
+      const soil_type = document.getElementById('m_soil').value;
+
+      if (!farm_name) {
+        showToast('Please enter a farm name', 'error'); return;
+      }
+      if (!district) {
+        showToast('Please select a district', 'error'); return;
+      }
+
+      const btn = document.getElementById('addFarmBtn');
+      btn.innerHTML = '<span class="spinner"></span> Adding...';
+      btn.disabled = true;
+
+      const data = await apiCall('/farms', 'POST', {
+        farm_name, district, location,
+        size_acres: parseFloat(size_acres) || null,
+        soil_type
+      });
+
+      if (data.success) {
+        showToast('Farm added successfully! 🌾');
+        closeModal();
+        // Reset form
+        document.getElementById('farm_name').value = '';
+        document.getElementById('m_district').value = '';
+        document.getElementById('m_location').value = '';
+        document.getElementById('m_size').value = '';
+        loadFarms();
+      } else {
+        showToast(data.message || 'Failed to add farm', 'error');
+      }
+
+      btn.innerHTML = '🌾 Add Farm';
+      btn.disabled = false;
+    }
+
+    loadFarms();
+  </script>
+
+</body>
+</html>

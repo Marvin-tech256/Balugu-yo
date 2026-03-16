@@ -25,7 +25,7 @@ app.get('/', (req, res) => {
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/farms', require('./routes/farms'));
 app.use('/api/predictions', require('./routes/predictions'));
-// app.use('/api/weather', require('./routes/weather'));
+app.use('/api/weather', require('./routes/weather'));
 // app.use('/api/alerts', require('./routes/alerts'));
 
 const PORT = process.env.PORT || 5000;

@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard — Balugu Yo</title>
+  <link rel="stylesheet" href="css/style.css"/>
+  <style>
+    .hero-card {
+      background: linear-gradient(135deg, #1B5E20, #2E7D32, #00897B);
+      border-radius: 20px;
+      padding: 24px;
+      color: white;
+      margin-bottom: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card::before {
+      content: '🌿';
+      position: absolute;
+      right: -10px;
+      top: -10px;
+      font-size: 100px;
+      opacity: 0.15;
+    }
+
+    .hero-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: rgba(255,255,255,0.75);
+      margin-bottom: 6px;
+    }
+
+    .hero-days {
+      font-family: 'Poppins', sans-serif;
+      font-size: 52px;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .hero-farm {
+      font-size: 14px;
+      color: rgba(255,255,255,0.85);
+      margin-bottom: 16px;
+    }
+
+    .hero-progress {
+      background: rgba(255,255,255,0.2);
+      border-radius: 20px;
+      height: 8px;
+      margin-bottom: 6px;
+    }
+
+    .hero-progress-fill {
+      background: #A5D6A7;
+      border-radius: 20px;
+      height: 8px;
+      transition: width 1s ease;
+    }
+
+    .hero-progress-label {
+      font-size: 12px;
+      color: rgba(255,255,255,0.75);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .hero-btn {
+      margin-top: 16px;
+      background: rgba(255,255,255,0.2);
+      border: 1px solid rgba(255,255,255,0.4);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+      display: inline-block;
+    }
+
+    /* Stats row */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .stat-card {
+      background: white;
+      border-radius: var(--radius);
+      padding: 14px 10px;
+      text-align: center;
+      box-shadow: var(--shadow);
+    }
+
+    .stat-icon { font-size: 22px; margin-bottom: 4px; }
+
+    .stat-value {
+      font-family: 'Poppins', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .stat-label {
+      font-size: 11px;
+      color: var(--text-gray);
+      margin-top: 2px;
+    }
+
+    /* Section headers */
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .section-header h3 {
+      font-size: 16px;
+      color: var(--text);
+    }
+
+    .section-header a {
+      font-size: 13px;
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    /* Farm cards scroll */
+    .farms-scroll {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      margin-bottom: 20px;
+      scrollbar-width: none;
+    }
+
+    .farms-scroll::-webkit-scrollbar { display: none; }
+
+    .farm-card-small {
+      min-width: 180px;
+      background: white;
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: var(--shadow);
+      flex-shrink: 0;
+    }
+
+    .farm-card-small .farm-icon {
+      font-size: 28px;
+      margin-bottom: 8px;
+    }
+
+    .farm-card-small .farm-name {
+      font-weight: 600;
+      font-size: 14px;
+      margin-bottom: 4px;
+      color: var(--text);
+    }
+
+    .farm-card-small .farm-meta {
+      font-size: 12px;
+      color: var(--text-gray);
+      margin-bottom: 10px;
+    }
+
+    .farm-card-small .farm-days {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    /* Add farm card */
+    .add-farm-card {
+      min-width: 140px;
+      background: #E8F5E9;
+      border: 2px dashed var(--primary);
+      border-radius: var(--radius);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      text-align: center;
+      gap: 8px;
+      color: var(--primary);
+      font-weight: 600;
+      font-size: 13px;
+    }
+
+    .add-farm-card span { font-size: 28px; }
+
+    /* Quick actions */
+    .quick-actions {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .action-btn {
+      background: white;
+      border-radius: var(--radius);
+      padding: 18px 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      border: none;
+      text-align: left;
+      transition: transform 0.2s;
+    }
+
+    .action-btn:hover { transform: translateY(-2px); }
+
+    .action-btn .action-icon {
+      font-size: 28px;
+      flex-shrink: 0;
+    }
+
+    .action-btn .action-text .action-title {
+      font-family: 'Poppins', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .action-btn .action-text .action-sub {
+      font-size: 11px;
+      color: var(--text-gray);
+      margin-top: 2px;
+    }
+
+    /* Recent alerts */
+    .alert-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 14px;
+      background: white;
+      border-radius: var(--radius);
+      margin-bottom: 10px;
+      box-shadow: var(--shadow);
+    }
+
+    .alert-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      margin-top: 4px;
+      flex-shrink: 0;
+    }
+
+    .alert-dot.harvest { background: var(--primary); }
+    .alert-dot.weather { background: var(--accent); }
+    .alert-dot.warning { background: var(--amber); }
+    .alert-dot.system  { background: var(--text-gray); }
+
+    .alert-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 2px;
+    }
+
+    .alert-msg {
+      font-size: 12px;
+      color: var(--text-gray);
+      line-height: 1.5;
+    }
+
+    /* Greeting */
+    .greeting {
+      margin-bottom: 20px;
+    }
+
+    .greeting h2 {
+      font-size: 20px;
+      color: var(--text);
+    }
+
+    .greeting p {
+      font-size: 13px;
+      color: var(--text-gray);
+      margin-top: 2px;
+    }
+
+    /* No prediction state */
+    .no-prediction {
+      background: linear-gradient(135deg, #E8F5E9, #E0F2F1);
+      border-radius: 20px;
+      padding: 32px 24px;
+      text-align: center;
+      margin-bottom: 20px;
+      border: 2px dashed var(--primary);
+    }
+
+    .no-prediction h3 {
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+
+    .no-prediction p {
+      color: var(--text-gray);
+      font-size: 13px;
+      margin-bottom: 16px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="navbar-brand">Balugu <span>Yo</span></div>
+    <div class="navbar-actions">
+      <button class="notif-btn" onclick="window.location.href='alerts.html'">
+        🔔
+        <span class="notif-badge" id="notifCount" style="display:none">0</span>
+      </button>
+      <div class="avatar" id="userAvatar" onclick="window.location.href='profile.html'">L</div>
+    </div>
+  </nav>
+
+  <!-- SIDEBAR (Desktop) -->
+  <div class="app-layout">
+    <div class="sidebar">
+      <div class="sidebar-logo">Balugu <span>Yo</span></div>
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="active">
+          <span class="nav-icon">🏠</span> Dashboard
+        </a>
+        <a href="my-farms.html">
+          <span class="nav-icon">🌾</span> My Farms
+        </a>
+        <a href="add-planting.html">
+          <span class="nav-icon">🌱</span> Add Planting
+        </a>
+        <a href="weather.html">
+          <span class="nav-icon">🌧️</span> Weather
+        </a>
+        <a href="alerts.html">
+          <span class="nav-icon">🔔</span> Alerts
+        </a>
+      </nav>
+      <div style="padding: 20px; border-top: 1px solid rgba(255,255,255,0.1);">
+        <a href="#" onclick="logout()"
+           style="color:rgba(255,255,255,0.6); font-size:13px;">
+          🚪 Logout
+        </a>
+      </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+      <div class="page-wrapper">
+
+        <!-- Greeting -->
+        <div class="greeting">
+          <h2 id="greetingText">Good morning! 👋</h2>
+          <p id="greetingName">Loading your dashboard...</p>
+        </div>
+
+        <!-- Hero Prediction Card -->
+        <div id="heroPrediction"></div>
+
+        <!-- Stats Row -->
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-icon">🌾</div>
+            <div class="stat-value" id="totalFarms">0</div>
+            <div class="stat-label">My Farms</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">🌱</div>
+            <div class="stat-value" id="totalPlantings">0</div>
+            <div class="stat-label">Plantings</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">🔔</div>
+            <div class="stat-value" id="totalAlerts">0</div>
+            <div class="stat-label">Alerts</div>
+          </div>
+        </div>
+
+        <!-- My Farms -->
+        <div class="section-header">
+          <h3>My Farms</h3>
+          <a href="my-farms.html">View all</a>
+        </div>
+        <div class="farms-scroll" id="farmsScroll">
+          <div class="add-farm-card"
+               onclick="window.location.href='add-planting.html'">
+            <span>➕</span>
+            Add New Farm
+          </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="section-header">
+          <h3>Quick Actions</h3>
+        </div>
+        <div class="quick-actions">
+          <button class="action-btn"
+                  onclick="window.location.href='add-planting.html'">
+            <span class="action-icon">🌱</span>
+            <div class="action-text">
+              <div class="action-title">Add Planting</div>
+              <div class="action-sub">Record new yam planting</div>
+            </div>
+          </button>
+          <button class="action-btn"
+                  onclick="window.location.href='weather.html'">
+            <span class="action-icon">🌧️</span>
+            <div class="action-text">
+              <div class="action-title">Weather</div>
+              <div class="action-sub">Check conditions</div>
+            </div>
+          </button>
+          <button class="action-btn"
+                  onclick="window.location.href='my-farms.html'">
+            <span class="action-icon">🌾</span>
+            <div class="action-text">
+              <div class="action-title">My Farms</div>
+              <div class="action-sub">View all farms</div>
+            </div>
+          </button>
+          <button class="action-btn"
+                  onclick="window.location.href='alerts.html'">
+            <span class="action-icon">🔔</span>
+            <div class="action-text">
+              <div class="action-title">Alerts</div>
+              <div class="action-sub">View notifications</div>
+            </div>
+          </button>
+        </div>
+
+        <!-- Recent Alerts -->
+        <div class="section-header">
+          <h3>Recent Alerts</h3>
+          <a href="alerts.html">View all</a>
+        </div>
+        <div id="recentAlerts">
+          <div class="empty-state">
+            <div class="empty-icon">🔔</div>
+            <p>No alerts yet</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM NAV (Mobile) -->
+  <nav class="bottom-nav">
+    <a href="dashboard.html" class="active">
+      <span class="nav-icon">🏠</span> Home
+    </a>
+    <a href="my-farms.html">
+      <span class="nav-icon">🌾</span> Farms
+    </a>
+    <a href="add-planting.html">
+      <span class="nav-icon">🌱</span> Plant
+    </a>
+    <a href="weather.html">
+      <span class="nav-icon">🌧️</span> Weather
+    </a>
+    <a href="alerts.html">
+      <span class="nav-icon">🔔</span> Alerts
+    </a>
+  </nav>
+
+  <script src="js/auth.js"></script>
+  <script>
+    requireAuth();
+
+    const user = getUser();
+
+    // Set greeting
+    const hour = new Date().getHours();
+    const greet = hour < 12 ? 'Good morning' :
+                  hour < 17 ? 'Good afternoon' : 'Good evening';
+    document.getElementById('greetingText').textContent = `${greet}! 👋`;
+    document.getElementById('greetingName').textContent =
+      `Welcome back, ${user.full_name.split(' ')[0]}`;
+
+    // Set avatar initial
+    document.getElementById('userAvatar').textContent =
+      user.full_name.charAt(0).toUpperCase();
+
+    // Load dashboard data
+    async function loadDashboard() {
+      try {
+        // Load farms
+        const farmsData = await apiCall('/farms/my');
+        if (farmsData.success) {
+          document.getElementById('totalFarms').textContent = farmsData.count;
+          renderFarms(farmsData.farms);
+        }
+
+        // Load predictions
+        const predData = await apiCall('/predictions/my-predictions');
+        if (predData.success) {
+          document.getElementById('totalPlantings').textContent = predData.count;
+          renderHeroPrediction(predData.predictions);
+        }
+
+        // Load alerts
+        const alertData = await apiCall('/alerts/unread');
+        if (alertData.success) {
+          document.getElementById('totalAlerts').textContent = alertData.count;
+          if (alertData.count > 0) {
+            const badge = document.getElementById('notifCount');
+            badge.style.display = 'flex';
+            badge.textContent = alertData.count;
+          }
+          renderAlerts(alertData.notifications);
+        }
+
+      } catch (err) {
+        console.error('Dashboard load error:', err);
+      }
+    }
+
+    function renderHeroPrediction(predictions) {
+      const container = document.getElementById('heroPrediction');
+      if (!predictions || predictions.length === 0) {
+        container.innerHTML = `
+          <div class="no-prediction">
+            <div style="font-size:48px;margin-bottom:12px">🌱</div>
+            <h3>No Active Planting</h3>
+            <p>Add your first yam planting to get your harvest prediction!</p>
+            <button class="btn btn-primary"
+              style="max-width:200px;margin:0 auto"
+              onclick="window.location.href='add-planting.html'">
+              Add Planting
+            </button>
+          </div>`;
+        return;
+      }
+
+      // Show the nearest upcoming harvest
+      const upcoming = predictions
+        .filter(p => p.days_remaining > 0)
+        .sort((a, b) => a.days_remaining - b.days_remaining)[0]
+        || predictions[0];
+
+      const progress = upcoming.days_remaining > 0
+        ? Math.round(((270 - upcoming.days_remaining) / 270) * 100)
+        : 100;
+
+      container.innerHTML = `
+        <div class="hero-card">
+          <div class="hero-label">Your Next Harvest</div>
+          <div class="hero-days">
+            ${upcoming.days_remaining > 0
+              ? upcoming.days_remaining + ' Days'
+              : 'Ready! 🎉'}
+          </div>
+          <div class="hero-farm">
+            📍 ${upcoming.farm_name} — ${upcoming.yam_variety}
+          </div>
+          <div class="hero-progress">
+            <div class="hero-progress-fill"
+                 style="width:${Math.min(progress,100)}%"></div>
+          </div>
+          <div class="hero-progress-label">
+            <span>Planted</span>
+            <span>${upcoming.confidence_percent}% confidence</span>
+            <span>Harvest</span>
+          </div>
+          <div class="hero-btn"
+               onclick="window.location.href='add-planting.html'">
+            📅 ${upcoming.predicted_harvest_date}
+          </div>
+        </div>`;
+    }
+
+    function renderFarms(farms) {
+      const scroll = document.getElementById('farmsScroll');
+      if (!farms || farms.length === 0) return;
+
+      const cards = farms.map(f => `
+        <div class="farm-card-small">
+          <div class="farm-icon">🌾</div>
+          <div class="farm-name">${f.farm_name}</div>
+          <div class="farm-meta">📍 ${f.district}</div>
+          ${f.days_remaining
+            ? `<div class="farm-days">🗓 ${f.days_remaining} days to harvest</div>`
+            : `<span class="badge badge-growing">Growing</span>`}
+        </div>`).join('');
+
+      scroll.innerHTML = cards + `
+        <div class="add-farm-card"
+             onclick="window.location.href='add-planting.html'">
+          <span>➕</span> Add New Farm
+        </div>`;
+    }
+
+    function renderAlerts(alerts) {
+      const container = document.getElementById('recentAlerts');
+      if (!alerts || alerts.length === 0) return;
+
+      container.innerHTML = alerts.slice(0, 3).map(a => `
+        <div class="alert-item">
+          <div class="alert-dot ${a.type}"></div>
+          <div>
+            <div class="alert-title">${a.title}</div>
+            <div class="alert-msg">${a.message}</div>
+          </div>
+        </div>`).join('');
+    }
+
+    loadDashboard();
+  </script>
+
+</body>
+</html>

@@ -28,18 +28,8 @@ const toPage = (page) => {
 const logout = () => {
   localStorage.removeItem('balugu_token');
   localStorage.removeItem('balugu_user');
-  const toast = document.createElement('div');
-  toast.className = 'toast toast-success';
-  toast.textContent = 'You have been logged out successfully';
-  Object.assign(toast.style, {
-    position: 'fixed', bottom: '24px', left: '50%',
-    transform: 'translateX(-50%)', background: '#2E7D32',
-    color: 'white', padding: '12px 24px', borderRadius: '12px',
-    fontFamily: 'Poppins,sans-serif', fontSize: '14px',
-    fontWeight: '600', zIndex: '9999', boxShadow: '0 4px 16px rgba(0,0,0,0.2)'
-  });
-  document.body.appendChild(toast);
-  setTimeout(() => window.location.replace(toPage('login.html')), 1500);
+  showToast('Logged out successfully');
+  setTimeout(() => window.location.replace(toPage('login.html')), 1200);
 };
 
 // Redirect if not logged in

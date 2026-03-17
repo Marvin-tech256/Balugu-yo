@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dashboard — Balugu Yo</title>
-  <link rel="stylesheet" href="css/style.css"/>
+  <link rel="stylesheet" href="css/style.css" />
   <style>
     .hero-card {
       background: linear-gradient(135deg, #1B5E20, #2E7D32, #00897B);
@@ -29,7 +30,7 @@
       font-size: 12px;
       text-transform: uppercase;
       letter-spacing: 1px;
-      color: rgba(255,255,255,0.75);
+      color: rgba(255, 255, 255, 0.75);
       margin-bottom: 6px;
     }
 
@@ -43,12 +44,12 @@
 
     .hero-farm {
       font-size: 14px;
-      color: rgba(255,255,255,0.85);
+      color: rgba(255, 255, 255, 0.85);
       margin-bottom: 16px;
     }
 
     .hero-progress {
-      background: rgba(255,255,255,0.2);
+      background: rgba(255, 255, 255, 0.2);
       border-radius: 20px;
       height: 8px;
       margin-bottom: 6px;
@@ -63,15 +64,15 @@
 
     .hero-progress-label {
       font-size: 12px;
-      color: rgba(255,255,255,0.75);
+      color: rgba(255, 255, 255, 0.75);
       display: flex;
       justify-content: space-between;
     }
 
     .hero-btn {
       margin-top: 16px;
-      background: rgba(255,255,255,0.2);
-      border: 1px solid rgba(255,255,255,0.4);
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.4);
       color: white;
       padding: 10px 20px;
       border-radius: 20px;
@@ -98,7 +99,10 @@
       box-shadow: var(--shadow);
     }
 
-    .stat-icon { font-size: 22px; margin-bottom: 4px; }
+    .stat-icon {
+      font-size: 22px;
+      margin-bottom: 4px;
+    }
 
     .stat-value {
       font-family: 'Poppins', sans-serif;
@@ -142,7 +146,9 @@
       scrollbar-width: none;
     }
 
-    .farms-scroll::-webkit-scrollbar { display: none; }
+    .farms-scroll::-webkit-scrollbar {
+      display: none;
+    }
 
     .farm-card-small {
       min-width: 180px;
@@ -197,7 +203,9 @@
       font-size: 13px;
     }
 
-    .add-farm-card span { font-size: 28px; }
+    .add-farm-card span {
+      font-size: 28px;
+    }
 
     /* Quick actions */
     .quick-actions {
@@ -221,7 +229,9 @@
       transition: transform 0.2s;
     }
 
-    .action-btn:hover { transform: translateY(-2px); }
+    .action-btn:hover {
+      transform: translateY(-2px);
+    }
 
     .action-btn .action-icon {
       font-size: 28px;
@@ -261,10 +271,21 @@
       flex-shrink: 0;
     }
 
-    .alert-dot.harvest { background: var(--primary); }
-    .alert-dot.weather { background: var(--accent); }
-    .alert-dot.warning { background: var(--amber); }
-    .alert-dot.system  { background: var(--text-gray); }
+    .alert-dot.harvest {
+      background: var(--primary);
+    }
+
+    .alert-dot.weather {
+      background: var(--accent);
+    }
+
+    .alert-dot.warning {
+      background: var(--amber);
+    }
+
+    .alert-dot.system {
+      background: var(--text-gray);
+    }
 
     .alert-title {
       font-size: 13px;
@@ -317,6 +338,7 @@
     }
   </style>
 </head>
+
 <body>
 
   <!-- NAVBAR -->
@@ -327,7 +349,7 @@
         🔔
         <span class="notif-badge" id="notifCount" style="display:none">0</span>
       </button>
-      <div class="avatar" id="userAvatar" onclick="window.location.href='profile.html'">L</div>
+      <div class="avatar" id="userAvatar" onclick="openProfileSheet()">L</div>
     </div>
   </nav>
 
@@ -353,8 +375,7 @@
         </a>
       </nav>
       <div style="padding: 20px; border-top: 1px solid rgba(255,255,255,0.1);">
-        <a href="#" onclick="logout()"
-           style="color:rgba(255,255,255,0.6); font-size:13px;">
+        <a href="#" onclick="logout()" style="color:rgba(255,255,255,0.6); font-size:13px;">
           🚪 Logout
         </a>
       </div>
@@ -398,8 +419,7 @@
           <a href="my-farms.html">View all</a>
         </div>
         <div class="farms-scroll" id="farmsScroll">
-          <div class="add-farm-card"
-               onclick="window.location.href='add-planting.html'">
+          <div class="add-farm-card" onclick="window.location.href='add-planting.html'">
             <span>➕</span>
             Add New Farm
           </div>
@@ -410,32 +430,28 @@
           <h3>Quick Actions</h3>
         </div>
         <div class="quick-actions">
-          <button class="action-btn"
-                  onclick="window.location.href='add-planting.html'">
+          <button class="action-btn" onclick="window.location.href='add-planting.html'">
             <span class="action-icon">🌱</span>
             <div class="action-text">
               <div class="action-title">Add Planting</div>
               <div class="action-sub">Record new yam planting</div>
             </div>
           </button>
-          <button class="action-btn"
-                  onclick="window.location.href='weather.html'">
+          <button class="action-btn" onclick="window.location.href='weather.html'">
             <span class="action-icon">🌧️</span>
             <div class="action-text">
               <div class="action-title">Weather</div>
               <div class="action-sub">Check conditions</div>
             </div>
           </button>
-          <button class="action-btn"
-                  onclick="window.location.href='my-farms.html'">
+          <button class="action-btn" onclick="window.location.href='my-farms.html'">
             <span class="action-icon">🌾</span>
             <div class="action-text">
               <div class="action-title">My Farms</div>
               <div class="action-sub">View all farms</div>
             </div>
           </button>
-          <button class="action-btn"
-                  onclick="window.location.href='alerts.html'">
+          <button class="action-btn" onclick="window.location.href='alerts.html'">
             <span class="action-icon">🔔</span>
             <div class="action-text">
               <div class="action-title">Alerts</div>
@@ -474,10 +490,71 @@
     <a href="weather.html">
       <span class="nav-icon">🌧️</span> Weather
     </a>
-    <a href="alerts.html">
-      <span class="nav-icon">🔔</span> Alerts
+    <a href="#" onclick="openProfileSheet(); return false;">
+      <span class="nav-icon">👤</span> Profile
     </a>
   </nav>
+
+  <!-- PROFILE SHEET -->
+  <div class="profile-overlay" id="profileOverlay" onclick="handleProfileOverlay(event)">
+    <div class="profile-sheet">
+      <div class="profile-sheet-handle"></div>
+
+      <!-- User info -->
+      <div class="profile-user-row">
+        <div class="profile-avatar-lg" id="sheetAvatar">L</div>
+        <div>
+          <div class="profile-name" id="sheetName">Loading...</div>
+          <div class="profile-phone" id="sheetPhone"></div>
+          <span class="profile-role" id="sheetRole">Farmer</span>
+        </div>
+      </div>
+
+      <!-- Menu items -->
+      <div id="profileMenu">
+        <div class="profile-menu-item" onclick="togglePinChange()">
+          <div class="profile-menu-icon" style="background:#E8F5E9">🔑</div>
+          <div>
+            <div class="profile-menu-label">Change PIN</div>
+            <div class="profile-menu-sub">Update your 4-digit PIN</div>
+          </div>
+        </div>
+
+        <!-- PIN change form -->
+        <div class="pin-change-form" id="pinChangeForm">
+          <div class="form-group">
+            <label>Current PIN</label>
+            <div class="pin-row">
+              <input type="password" maxlength="1" class="pin-box-sm" id="op1" />
+              <input type="password" maxlength="1" class="pin-box-sm" id="op2" />
+              <input type="password" maxlength="1" class="pin-box-sm" id="op3" />
+              <input type="password" maxlength="1" class="pin-box-sm" id="op4" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>New PIN</label>
+            <div class="pin-row">
+              <input type="password" maxlength="1" class="pin-box-sm" id="np1" />
+              <input type="password" maxlength="1" class="pin-box-sm" id="np2" />
+              <input type="password" maxlength="1" class="pin-box-sm" id="np3" />
+              <input type="password" maxlength="1" class="pin-box-sm" id="np4" />
+            </div>
+          </div>
+          <button class="btn btn-primary" style="margin-bottom:16px" onclick="handleChangePin()">
+            Update PIN
+          </button>
+        </div>
+
+        <div class="profile-menu-item danger" onclick="logout()">
+          <div class="profile-menu-icon" style="background:#FFEBEE">🚪</div>
+          <div>
+            <div class="profile-menu-label">Logout</div>
+            <div class="profile-menu-sub">Sign out of your account</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <script src="js/auth.js"></script>
   <script>
@@ -488,7 +565,7 @@
     // Set greeting
     const hour = new Date().getHours();
     const greet = hour < 12 ? 'Good morning' :
-                  hour < 17 ? 'Good afternoon' : 'Good evening';
+      hour < 17 ? 'Good afternoon' : 'Good evening';
     document.getElementById('greetingText').textContent = `${greet}! 👋`;
     document.getElementById('greetingName').textContent =
       `Welcome back, ${user.full_name.split(' ')[0]}`;
@@ -563,15 +640,15 @@
           <div class="hero-label">Your Next Harvest</div>
           <div class="hero-days">
             ${upcoming.days_remaining > 0
-              ? upcoming.days_remaining + ' Days'
-              : 'Ready! 🎉'}
+          ? upcoming.days_remaining + ' Days'
+          : 'Ready! 🎉'}
           </div>
           <div class="hero-farm">
             📍 ${upcoming.farm_name} — ${upcoming.yam_variety}
           </div>
           <div class="hero-progress">
             <div class="hero-progress-fill"
-                 style="width:${Math.min(progress,100)}%"></div>
+                 style="width:${Math.min(progress, 100)}%"></div>
           </div>
           <div class="hero-progress-label">
             <span>Planted</span>
@@ -595,8 +672,8 @@
           <div class="farm-name">${f.farm_name}</div>
           <div class="farm-meta">📍 ${f.district}</div>
           ${f.days_remaining
-            ? `<div class="farm-days">🗓 ${f.days_remaining} days to harvest</div>`
-            : `<span class="badge badge-growing">Growing</span>`}
+          ? `<div class="farm-days">🗓 ${f.days_remaining} days to harvest</div>`
+          : `<span class="badge badge-growing">Growing</span>`}
         </div>`).join('');
 
       scroll.innerHTML = cards + `
@@ -621,7 +698,67 @@
     }
 
     loadDashboard();
+
+    // Profile sheet
+    function openProfileSheet() {
+      const u = getUser();
+      if (!u) return;
+      document.getElementById('sheetAvatar').textContent =
+        u.full_name.charAt(0).toUpperCase();
+      document.getElementById('sheetName').textContent = u.full_name;
+      document.getElementById('sheetPhone').textContent = u.phone || '';
+      document.getElementById('sheetRole').textContent =
+        u.role === 'admin' ? 'Admin'
+          : u.role === 'extension_officer' ? 'Extension Officer'
+            : 'Farmer';
+      document.getElementById('profileOverlay').classList.add('show');
+    }
+
+    function handleProfileOverlay(e) {
+      if (e.target === document.getElementById('profileOverlay')) {
+        document.getElementById('profileOverlay').classList.remove('show');
+      }
+    }
+
+    function togglePinChange() {
+      const form = document.getElementById('pinChangeForm');
+      form.classList.toggle('show');
+    }
+
+    // Auto-advance PIN boxes
+    document.querySelectorAll('.pin-box-sm').forEach((box, i, boxes) => {
+      box.addEventListener('input', () => {
+        if (box.value && i < boxes.length - 1) boxes[i + 1].focus();
+      });
+      box.addEventListener('keydown', e => {
+        if (e.key === 'Backspace' && !box.value && i > 0) boxes[i - 1].focus();
+      });
+    });
+
+    async function handleChangePin() {
+      const oldPin = ['op1', 'op2', 'op3', 'op4'].map(id =>
+        document.getElementById(id).value).join('');
+      const newPin = ['np1', 'np2', 'np3', 'np4'].map(id =>
+        document.getElementById(id).value).join('');
+
+      if (oldPin.length < 4 || newPin.length < 4) {
+        showToast('Enter both current and new PIN', 'error'); return;
+      }
+
+      const data = await apiCall('/auth/change-pin', 'POST',
+        { old_pin: oldPin, new_pin: newPin });
+
+      if (data.success) {
+        showToast('PIN updated successfully');
+        document.getElementById('pinChangeForm').classList.remove('show');
+        ['op1', 'op2', 'op3', 'op4', 'np1', 'np2', 'np3', 'np4'].forEach(id =>
+          document.getElementById(id).value = '');
+      } else {
+        showToast(data.message || 'Failed to update PIN', 'error');
+      }
+    }
   </script>
 
 </body>
+
 </html>

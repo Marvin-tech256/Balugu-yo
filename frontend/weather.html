@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Weather — Balugu Yo</title>
-  <link rel="stylesheet" href="css/style.css"/>
+  <link rel="stylesheet" href="css/style.css" />
   <style>
     .page-header {
       background: linear-gradient(135deg, #1B5E20, #00897B);
@@ -20,7 +21,7 @@
     }
 
     .back-btn {
-      background: rgba(255,255,255,0.2);
+      background: rgba(255, 255, 255, 0.2);
       border: none;
       color: white;
       width: 36px;
@@ -33,7 +34,10 @@
       justify-content: center;
     }
 
-    .page-header h1 { font-size: 20px; color: white; }
+    .page-header h1 {
+      font-size: 20px;
+      color: white;
+    }
 
     /* District selector */
     .district-selector {
@@ -44,13 +48,15 @@
       padding-bottom: 4px;
     }
 
-    .district-selector::-webkit-scrollbar { display: none; }
+    .district-selector::-webkit-scrollbar {
+      display: none;
+    }
 
     .district-chip {
       padding: 8px 16px;
       border-radius: 20px;
-      border: 1.5px solid rgba(255,255,255,0.4);
-      color: rgba(255,255,255,0.85);
+      border: 1.5px solid rgba(255, 255, 255, 0.4);
+      color: rgba(255, 255, 255, 0.85);
       font-size: 13px;
       font-weight: 500;
       cursor: pointer;
@@ -95,22 +101,27 @@
       line-height: 1;
     }
 
-    .current-unit { font-size: 24px; font-weight: 400; }
+    .current-unit {
+      font-size: 24px;
+      font-weight: 400;
+    }
 
     .current-condition {
       font-size: 15px;
-      color: rgba(255,255,255,0.85);
+      color: rgba(255, 255, 255, 0.85);
       margin-top: 4px;
       text-transform: capitalize;
     }
 
     .current-location {
       font-size: 13px;
-      color: rgba(255,255,255,0.7);
+      color: rgba(255, 255, 255, 0.7);
       margin-bottom: 8px;
     }
 
-    .current-icon { font-size: 64px; }
+    .current-icon {
+      font-size: 64px;
+    }
 
     .current-details {
       display: grid;
@@ -127,7 +138,10 @@
       box-shadow: var(--shadow);
     }
 
-    .detail-icon { font-size: 20px; margin-bottom: 4px; }
+    .detail-icon {
+      font-size: 20px;
+      margin-bottom: 4px;
+    }
 
     .detail-value {
       font-family: 'Poppins', sans-serif;
@@ -152,7 +166,9 @@
       margin-bottom: 16px;
     }
 
-    .forecast-scroll::-webkit-scrollbar { display: none; }
+    .forecast-scroll::-webkit-scrollbar {
+      display: none;
+    }
 
     .forecast-card {
       min-width: 80px;
@@ -176,7 +192,10 @@
       text-transform: uppercase;
     }
 
-    .forecast-icon { font-size: 24px; margin-bottom: 8px; }
+    .forecast-icon {
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
 
     .forecast-temp {
       font-family: 'Poppins', sans-serif;
@@ -190,7 +209,9 @@
       color: var(--accent);
     }
 
-    .forecast-card.today .forecast-rain { color: #A5D6A7; }
+    .forecast-card.today .forecast-rain {
+      color: #A5D6A7;
+    }
 
     /* Impact section */
     .impact-card {
@@ -217,7 +238,9 @@
       border-bottom: 1px solid var(--border);
     }
 
-    .impact-row:last-child { border-bottom: none; }
+    .impact-row:last-child {
+      border-bottom: none;
+    }
 
     .impact-label {
       font-size: 13px;
@@ -234,9 +257,20 @@
       border-radius: 20px;
     }
 
-    .impact-good    { background: #E8F5E9; color: #2E7D32; }
-    .impact-moderate{ background: #FFF8E1; color: #F57F17; }
-    .impact-bad     { background: #FFEBEE; color: #C62828; }
+    .impact-good {
+      background: #E8F5E9;
+      color: #2E7D32;
+    }
+
+    .impact-moderate {
+      background: #FFF8E1;
+      color: #F57F17;
+    }
+
+    .impact-bad {
+      background: #FFEBEE;
+      color: #C62828;
+    }
 
     /* Recommendation */
     .recommendation {
@@ -250,7 +284,10 @@
       align-items: flex-start;
     }
 
-    .recommendation-icon { font-size: 24px; flex-shrink: 0; }
+    .recommendation-icon {
+      font-size: 24px;
+      flex-shrink: 0;
+    }
 
     .recommendation-text {
       font-size: 13px;
@@ -288,6 +325,7 @@
     }
   </style>
 </head>
+
 <body>
 
   <!-- Header -->
@@ -342,8 +380,7 @@
         </a>
       </nav>
       <div style="padding:20px;border-top:1px solid rgba(255,255,255,0.1)">
-        <a href="#" onclick="logout()"
-           style="color:rgba(255,255,255,0.6);font-size:13px">
+        <a href="#" onclick="logout()" style="color:rgba(255,255,255,0.6);font-size:13px">
           🚪 Logout
         </a>
       </div>
@@ -406,8 +443,8 @@
     <a href="weather.html" class="active">
       <span class="nav-icon">🌧️</span> Weather
     </a>
-    <a href="alerts.html">
-      <span class="nav-icon">🔔</span> Alerts
+    <a href="#" onclick="logout(); return false;">
+      <span class="nav-icon">🚪</span> Logout
     </a>
   </nav>
 
@@ -507,7 +544,7 @@
     }
 
     function renderForecast(forecast) {
-      const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+      const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
       document.getElementById('forecastScroll').innerHTML =
         forecast.map((day, i) => {
           const d = new Date(day.date);
@@ -524,8 +561,8 @@
 
     function renderImpact(data) {
       const getClass = (val) => {
-        if (['Good','Optimal','Low'].includes(val)) return 'impact-good';
-        if (['Moderate','Normal'].includes(val)) return 'impact-moderate';
+        if (['Good', 'Optimal', 'Low'].includes(val)) return 'impact-good';
+        if (['Moderate', 'Normal'].includes(val)) return 'impact-moderate';
         return 'impact-bad';
       };
 
@@ -563,4 +600,5 @@
   </script>
 
 </body>
+
 </html>

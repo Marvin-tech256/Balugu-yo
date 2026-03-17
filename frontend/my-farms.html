@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>My Farms — Balugu Yo</title>
-  <link rel="stylesheet" href="css/style.css"/>
+  <link rel="stylesheet" href="css/style.css" />
   <style>
     .page-header {
       background: linear-gradient(135deg, #1B5E20, #2E7D32);
@@ -22,7 +23,7 @@
     }
 
     .back-btn {
-      background: rgba(255,255,255,0.2);
+      background: rgba(255, 255, 255, 0.2);
       border: none;
       color: white;
       width: 36px;
@@ -35,11 +36,14 @@
       justify-content: center;
     }
 
-    .page-header h1 { font-size: 20px; color: white; }
+    .page-header h1 {
+      font-size: 20px;
+      color: white;
+    }
 
     .add-btn {
-      background: rgba(255,255,255,0.2);
-      border: 1px solid rgba(255,255,255,0.4);
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.4);
       color: white;
       padding: 8px 16px;
       border-radius: 20px;
@@ -98,7 +102,9 @@
       transition: transform 0.2s;
     }
 
-    .farm-card:hover { transform: translateY(-2px); }
+    .farm-card:hover {
+      transform: translateY(-2px);
+    }
 
     .farm-card-top {
       display: flex;
@@ -135,7 +141,9 @@
       color: var(--text-gray);
     }
 
-    .meta-item strong { color: var(--text); }
+    .meta-item strong {
+      color: var(--text);
+    }
 
     .farm-card-footer {
       display: flex;
@@ -181,7 +189,7 @@
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.5);
+      background: rgba(0, 0, 0, 0.5);
       z-index: 200;
       align-items: flex-end;
       justify-content: center;
@@ -279,6 +287,7 @@
     }
   </style>
 </head>
+
 <body>
 
   <!-- Header -->
@@ -312,8 +321,7 @@
         </a>
       </nav>
       <div style="padding:20px;border-top:1px solid rgba(255,255,255,0.1)">
-        <a href="#" onclick="logout()"
-           style="color:rgba(255,255,255,0.6);font-size:13px">
+        <a href="#" onclick="logout()" style="color:rgba(255,255,255,0.6);font-size:13px">
           🚪 Logout
         </a>
       </div>
@@ -341,9 +349,7 @@
         <!-- Search -->
         <div class="search-bar">
           <span class="search-icon">🔍</span>
-          <input type="text" id="searchInput"
-                 placeholder="Search farms..."
-                 oninput="filterFarms()"/>
+          <input type="text" id="searchInput" placeholder="Search farms..." oninput="filterFarms()" />
         </div>
 
         <!-- Farms List -->
@@ -352,9 +358,7 @@
             <div class="empty-icon">🌾</div>
             <h3>No farms yet</h3>
             <p>Add your first farm to get started</p>
-            <button class="btn btn-primary"
-                    style="max-width:200px;margin:16px auto 0"
-                    onclick="openModal()">
+            <button class="btn btn-primary" style="max-width:200px;margin:16px auto 0" onclick="openModal()">
               Add Farm
             </button>
           </div>
@@ -378,14 +382,13 @@
     <a href="weather.html">
       <span class="nav-icon">🌧️</span> Weather
     </a>
-    <a href="alerts.html">
-      <span class="nav-icon">🔔</span> Alerts
+    <a href="#" onclick="logout(); return false;">
+      <span class="nav-icon">🚪</span> Logout
     </a>
   </nav>
 
   <!-- ADD FARM MODAL -->
-  <div class="modal-overlay" id="modalOverlay"
-       onclick="handleOverlayClick(event)">
+  <div class="modal-overlay" id="modalOverlay" onclick="handleOverlayClick(event)">
     <div class="modal">
       <div class="modal-header">
         <h3>🌾 Add New Farm</h3>
@@ -394,8 +397,7 @@
 
       <div class="form-group">
         <label>Farm Name</label>
-        <input type="text" class="form-control" id="farm_name"
-               placeholder="e.g. Bukunja Plot A"/>
+        <input type="text" class="form-control" id="farm_name" placeholder="e.g. Bukunja Plot A" />
       </div>
 
       <div class="form-group">
@@ -416,31 +418,25 @@
 
       <div class="form-group">
         <label>Village / Area</label>
-        <input type="text" class="form-control" id="m_location"
-               placeholder="e.g. Bukunja Village"/>
+        <input type="text" class="form-control" id="m_location" placeholder="e.g. Bukunja Village" />
       </div>
 
       <div class="form-group">
         <label>Farm Size (acres)</label>
-        <input type="number" class="form-control" id="m_size"
-               placeholder="e.g. 2.5" step="0.1" min="0.1"/>
+        <input type="number" class="form-control" id="m_size" placeholder="e.g. 2.5" step="0.1" min="0.1" />
       </div>
 
       <div class="form-group">
         <label>Soil Type</label>
         <div class="chip-group">
-          <div class="chip selected"
-               onclick="selectModalSoil('loam', this)">🟤 Loam</div>
-          <div class="chip"
-               onclick="selectModalSoil('clay', this)">🔴 Clay</div>
-          <div class="chip"
-               onclick="selectModalSoil('sandy', this)">🟡 Sandy</div>
+          <div class="chip selected" onclick="selectModalSoil('loam', this)">🟤 Loam</div>
+          <div class="chip" onclick="selectModalSoil('clay', this)">🔴 Clay</div>
+          <div class="chip" onclick="selectModalSoil('sandy', this)">🟡 Sandy</div>
         </div>
-        <input type="hidden" id="m_soil" value="loam"/>
+        <input type="hidden" id="m_soil" value="loam" />
       </div>
 
-      <button class="btn btn-primary" id="addFarmBtn"
-              onclick="handleAddFarm()">
+      <button class="btn btn-primary" id="addFarmBtn" onclick="handleAddFarm()">
         🌾 Add Farm
       </button>
     </div>
@@ -500,14 +496,13 @@
                 📍 ${f.location || ''} ${f.district}
               </div>
             </div>
-            <span class="badge ${
-              f.days_remaining <= 30 && f.days_remaining > 0
-                ? 'badge-soon'
-                : 'badge-growing'
-            }">
+            <span class="badge ${f.days_remaining <= 30 && f.days_remaining > 0
+          ? 'badge-soon'
+          : 'badge-growing'
+        }">
               ${f.days_remaining <= 30 && f.days_remaining > 0
-                ? 'Harvest Soon'
-                : 'Growing'}
+          ? 'Harvest Soon'
+          : 'Growing'}
             </span>
           </div>
 
@@ -526,8 +521,8 @@
           <div class="farm-card-footer">
             <div class="harvest-info">
               ${f.predicted_harvest_date
-                ? `🗓 Harvest: ${f.predicted_harvest_date} (${f.days_remaining} days)`
-                : '🌱 No planting recorded'}
+          ? `🗓 Harvest: ${f.predicted_harvest_date} (${f.days_remaining} days)`
+          : '🌱 No planting recorded'}
             </div>
             <div class="farm-actions">
               <button class="farm-action-btn btn-plant"
@@ -633,4 +628,5 @@
   </script>
 
 </body>
+
 </html>

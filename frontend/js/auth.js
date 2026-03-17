@@ -21,14 +21,7 @@ const getUser = () => {
 const logout = () => {
   localStorage.removeItem('balugu_token');
   localStorage.removeItem('balugu_user');
-  window.location.href = '/frontend/login.html';
-};
-
-// Redirect if not logged in
-const requireAuth = () => {
-  if (!getToken()) {
-    window.location.href = '/frontend/login.html';
-  }
+  window.location.href = 'login.html';
 };
 
 // Redirect if already logged in
@@ -36,12 +29,19 @@ const redirectIfLoggedIn = () => {
   if (getToken()) {
     const user = getUser();
     if (user.role === 'admin') {
-      window.location.href = '/frontend/admin.html';
+      window.location.href = 'admin.html';
     } else if (user.role === 'extension_officer') {
-      window.location.href = '/frontend/extension-dashboard.html';
+      window.location.href = 'extension-dashboard.html';
     } else {
-      window.location.href = '/frontend/dashboard.html';
+      window.location.href = 'dashboard.html';
     }
+  }
+};
+
+// Redirect if not logged in
+const requireAuth = () => {
+  if (!getToken()) {
+    window.location.href = 'login.html';
   }
 };
 

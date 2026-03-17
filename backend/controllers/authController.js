@@ -115,6 +115,11 @@ const login = async (req, res) => {
   }
 };
 
+// LOGOUT
+const logout = (req, res) => {
+  res.json({ success: true, message: 'You have been logged out successfully' });
+};
+
 // GET CURRENT USER (protected route)
 const getMe = async (req, res) => {
   try {

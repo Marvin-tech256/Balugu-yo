@@ -30,7 +30,8 @@ const getUser = () => {
 const logout = () => {
   localStorage.removeItem('balugu_token');
   localStorage.removeItem('balugu_user');
-  window.location.replace(getBase() + 'login.html');
+  showToast('You have been logged out successfully', 'success');
+  setTimeout(() => window.location.replace(getBase() + 'index.html'), 1500);
 };
 
 // Redirect if not logged in

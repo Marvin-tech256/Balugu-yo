@@ -2,15 +2,6 @@
 
 const API = 'https://balugu-yo-api.onrender.com/api';
 
-// Detect base path — works both locally and on Vercel
-const getBase = () => {
-  const path = window.location.pathname;
-  if (path.includes('/frontend/')) {
-    return '/frontend/';
-  }
-  return './';
-};
-
 // Save token and user to localStorage
 const saveAuth = (token, user) => {
   localStorage.setItem('balugu_token', token);
@@ -24,6 +15,13 @@ const getToken = () => localStorage.getItem('balugu_token');
 const getUser = () => {
   const user = localStorage.getItem('balugu_user');
   return user ? JSON.parse(user) : null;
+};
+
+// Resolve a page path relative to the current page's directory
+const toPage = (page) => {
+  const parts = window.location.pathname.split('/');
+  parts[parts.length - 1] = page;
+  return parts.join('/');
 };
 
 // Logout
@@ -41,13 +39,13 @@ const logout = () => {
     fontWeight: '600', zIndex: '9999', boxShadow: '0 4px 16px rgba(0,0,0,0.2)'
   });
   document.body.appendChild(toast);
-  setTimeout(() => window.location.replace(getBase() + 'index.html'), 1500);
+  setTimeout(() => window.location.replace(toPage('login.html')), 1500);
 };
 
 // Redirect if not logged in
 const requireAuth = () => {
   if (!getToken()) {
-    window.location.replace(getBase() + 'login.html');
+    window.location.replace(toPage('login.html'));
   }
 };
 
@@ -56,11 +54,11 @@ const redirectIfLoggedIn = () => {
   if (getToken()) {
     const user = getUser();
     if (user.role === 'admin') {
-      window.location.replace(getBase() + 'admin.html');
+      window.location.replace(toPage('admin.html'));
     } else if (user.role === 'extension_officer') {
-      window.location.replace(getBase() + 'extension-dashboard.html');
+      window.location.replace(toPage('extension-dashboard.html'));
     } else {
-      window.location.replace(getBase() + 'dashboard.html');
+      window.location.replace(toPage('dashboard.html'));
     }
   }
 };

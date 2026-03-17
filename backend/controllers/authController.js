@@ -116,7 +116,7 @@ const login = async (req, res) => {
 };
 
 // LOGOUT
-const logout = (req, res) => {
+const logout = (_req, res) => {
   res.json({ success: true, message: 'You have been logged out successfully' });
 };
 

@@ -2,7 +2,7 @@
 -- BALUGU YO — DATABASE SCHEMA
 -- ============================================
 
-USE balugu_yo;
+
 
 -- 1. USERS TABLE
 CREATE TABLE users (

@@ -1,7 +1,7 @@
 // backend/server.js
 const express = require('express');
-const cors = require('cors');
-const dotenv = require('dotenv');
+const cors    = require('cors');
+const dotenv  = require('dotenv');
 
 dotenv.config();
 
@@ -14,21 +14,27 @@ app.use(express.urlencoded({ extended: true }));
 
 // Test route
 app.get('/', (req, res) => {
-  res.json({ 
+  res.json({
     message: 'Balugu Yo API is running!',
     version: '1.0.0',
-    status: 'OK'
+    status:  'OK'
   });
 });
 
-// Routes (we will add these one by one)
-app.use('/api/auth', require('./routes/auth'));
-app.use('/api/farms', require('./routes/farms'));
+// Routes
+app.use('/api/auth',        require('./routes/auth'));
+app.use('/api/farms',       require('./routes/farms'));
 app.use('/api/predictions', require('./routes/predictions'));
-app.use('/api/weather', require('./routes/weather'));
-app.use('/api/alerts', require('./routes/alerts'));
+app.use('/api/weather',     require('./routes/weather'));
+app.use('/api/alerts',      require('./routes/alerts'));
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+// Export app for testing
+module.exports = app;
+
+// Only start server if run directly
+if (require.main === module) {
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+}

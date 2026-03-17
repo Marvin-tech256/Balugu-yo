@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Register — Balugu Yo</title>
+  <link rel="stylesheet" href="css/style.css"/>
+  <style>
+    body {
+      min-height: 100vh;
+      background: var(--bg);
+    }
+
+    .register-hero {
+      background: linear-gradient(160deg, #1B5E20, #2E7D32);
+      padding: 40px 24px 56px;
+      text-align: center;
+    }
+
+    .register-hero h1 {
+      font-size: 26px;
+      color: white;
+      margin-bottom: 6px;
+    }
+
+    .register-hero p {
+      color: rgba(255,255,255,0.8);
+      font-size: 14px;
+    }
+
+    .register-hero .hero-icon {
+      font-size: 44px;
+      display: block;
+      margin-bottom: 12px;
+    }
+
+    .register-form-card {
+      background: white;
+      border-radius: 24px 24px 0 0;
+      margin-top: -24px;
+      padding: 32px 24px 100px;
+      max-width: 480px;
+      width: 100%;
+      margin-left: auto;
+      margin-right: auto;
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.08);
+      min-height: calc(100vh - 160px);
+    }
+
+    /* Step indicator */
+    .steps {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 28px;
+    }
+
+    .step {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .step.active {
+      background: var(--primary);
+      color: white;
+    }
+
+    .step.done {
+      background: var(--accent);
+      color: white;
+    }
+
+    .step.inactive {
+      background: var(--border);
+      color: var(--text-gray);
+    }
+
+    .step-line {
+      flex: 1;
+      height: 2px;
+      background: var(--border);
+      max-width: 48px;
+    }
+
+    .step-line.done {
+      background: var(--accent);
+    }
+
+    .step-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .step-subtitle {
+      color: var(--text-gray);
+      font-size: 13px;
+      margin-bottom: 24px;
+    }
+
+    /* Form sections */
+    .form-section {
+      display: none;
+    }
+
+    .form-section.active {
+      display: block;
+    }
+
+    /* Soil type chips */
+    .chip-group {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .chip {
+      padding: 10px 18px;
+      border-radius: 20px;
+      border: 2px solid var(--border);
+      background: white;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .chip.selected {
+      border-color: var(--primary);
+      background: #E8F5E9;
+      color: var(--primary);
+    }
+
+    /* Role selector */
+    .role-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    .role-card {
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 12px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .role-card.selected {
+      border-color: var(--primary);
+      background: #E8F5E9;
+    }
+
+    .role-card .role-icon { font-size: 28px; margin-bottom: 6px; }
+    .role-card .role-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    /* PIN setup */
+    .pin-input-row {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin-bottom: 8px;
+    }
+
+    .pin-box {
+      width: 56px;
+      height: 56px;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      text-align: center;
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--primary);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .pin-box:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(46,125,50,0.1);
+    }
+
+    .phone-input-wrap {
+      display: flex;
+      align-items: center;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: border-color 0.2s;
+    }
+
+    .phone-input-wrap:focus-within {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(46,125,50,0.1);
+    }
+
+    .phone-prefix {
+      background: var(--bg);
+      padding: 13px 12px;
+      font-weight: 600;
+      color: var(--text);
+      border-right: 1.5px solid var(--border);
+      font-size: 14px;
+    }
+
+    .phone-input-wrap input {
+      border: none;
+      outline: none;
+      padding: 13px 16px;
+      font-size: 15px;
+      flex: 1;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .nav-buttons {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .btn-back {
+      background: var(--bg);
+      color: var(--text);
+      border: none;
+      padding: 13px;
+      border-radius: var(--radius);
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      font-size: 15px;
+      cursor: pointer;
+      flex: 1;
+    }
+
+    .login-link {
+      text-align: center;
+      margin-top: 20px;
+      color: var(--text-gray);
+      font-size: 14px;
+    }
+
+    .login-link a {
+      color: var(--primary);
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="register-hero">
+    <span class="hero-icon">🌱</span>
+    <h1>Create Account</h1>
+    <p>Join thousands of Ugandan yam farmers</p>
+  </div>
+
+  <div class="register-form-card">
+
+    <!-- Step Indicator -->
+    <div class="steps">
+      <div class="step active" id="step-dot-1">1</div>
+      <div class="step-line" id="line-1"></div>
+      <div class="step inactive" id="step-dot-2">2</div>
+      <div class="step-line" id="line-2"></div>
+      <div class="step inactive" id="step-dot-3">3</div>
+    </div>
+
+    <!-- STEP 1: Personal Info -->
+    <div class="form-section active" id="section-1">
+      <div class="step-title">Personal Information</div>
+      <div class="step-subtitle">Tell us about yourself</div>
+
+      <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" class="form-control" id="full_name"
+               placeholder="e.g. Nakato Sarah"/>
+      </div>
+
+      <div class="form-group">
+        <label>Phone Number</label>
+        <div class="phone-input-wrap">
+          <span class="phone-prefix">🇺🇬 +256</span>
+          <input type="tel" id="phone" placeholder="700 000 000" maxlength="9"/>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>I am a</label>
+        <div class="role-cards">
+          <div class="role-card selected" onclick="selectRole('farmer', this)">
+            <div class="role-icon">👨‍🌾</div>
+            <div class="role-name">Farmer</div>
+          </div>
+          <div class="role-card" onclick="selectRole('extension_officer', this)">
+            <div class="role-icon">👷</div>
+            <div class="role-name">Extension Officer</div>
+          </div>
+        </div>
+        <input type="hidden" id="role" value="farmer"/>
+      </div>
+
+      <button class="btn btn-primary" onclick="goToStep2()">
+        Continue →
+      </button>
+
+      <div class="login-link">
+        Already have an account? <a href="login.html">Login</a>
+      </div>
+    </div>
+
+    <!-- STEP 2: Farm Details -->
+    <div class="form-section" id="section-2">
+      <div class="step-title">Your Location</div>
+      <div class="step-subtitle">Where is your farm located?</div>
+
+      <div class="form-group">
+        <label>District</label>
+        <select class="form-control" id="district">
+          <option value="">Select your district</option>
+          <option value="Buikwe">Buikwe</option>
+          <option value="Bukunja">Bukunja</option>
+          <option value="Mukono">Mukono</option>
+          <option value="Kampala">Kampala</option>
+          <option value="Jinja">Jinja</option>
+          <option value="Mbale">Mbale</option>
+          <option value="Masaka">Masaka</option>
+          <option value="Mbarara">Mbarara</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Village / Area (optional)</label>
+        <input type="text" class="form-control" id="location"
+               placeholder="e.g. Bukunja Village"/>
+      </div>
+
+      <div class="nav-buttons">
+        <button class="btn-back" onclick="goToStep(1)">← Back</button>
+        <button class="btn btn-primary" style="flex:2"
+                onclick="goToStep3()">Continue →</button>
+      </div>
+    </div>
+
+    <!-- STEP 3: Set PIN -->
+    <div class="form-section" id="section-3">
+      <div class="step-title">Set Your PIN</div>
+      <div class="step-subtitle">Choose a 4-digit PIN to secure your account</div>
+
+      <div class="form-group">
+        <label>Create PIN</label>
+        <div class="pin-input-row">
+          <input type="password" maxlength="1" class="pin-box reg-pin" id="rp1"/>
+          <input type="password" maxlength="1" class="pin-box reg-pin" id="rp2"/>
+          <input type="password" maxlength="1" class="pin-box reg-pin" id="rp3"/>
+          <input type="password" maxlength="1" class="pin-box reg-pin" id="rp4"/>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Confirm PIN</label>
+        <div class="pin-input-row">
+          <input type="password" maxlength="1" class="pin-box conf-pin" id="cp1"/>
+          <input type="password" maxlength="1" class="pin-box conf-pin" id="cp2"/>
+          <input type="password" maxlength="1" class="pin-box conf-pin" id="cp3"/>
+          <input type="password" maxlength="1" class="pin-box conf-pin" id="cp4"/>
+        </div>
+      </div>
+
+      <div class="nav-buttons">
+        <button class="btn-back" onclick="goToStep(2)">← Back</button>
+        <button class="btn btn-primary" style="flex:2"
+                id="registerBtn" onclick="handleRegister()">
+          Create Account 🌿
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="js/auth.js"></script>
+  <script>
+    redirectIfLoggedIn();
+
+    let selectedRole = 'farmer';
+
+    function selectRole(role, el) {
+      selectedRole = role;
+      document.getElementById('role').value = role;
+      document.querySelectorAll('.role-card').forEach(c => c.classList.remove('selected'));
+      el.classList.add('selected');
+    }
+
+    function goToStep(n) {
+      document.querySelectorAll('.form-section').forEach(s => s.classList.remove('active'));
+      document.getElementById(`section-${n}`).classList.add('active');
+      updateStepDots(n);
+      window.scrollTo(0, 0);
+    }
+
+    function updateStepDots(n) {
+      for (let i = 1; i <= 3; i++) {
+        const dot = document.getElementById(`step-dot-${i}`);
+        if (i < n) {
+          dot.className = 'step done';
+          dot.textContent = '✓';
+        } else if (i === n) {
+          dot.className = 'step active';
+          dot.textContent = i;
+        } else {
+          dot.className = 'step inactive';
+          dot.textContent = i;
+        }
+      }
+      for (let i = 1; i <= 2; i++) {
+        const line = document.getElementById(`line-${i}`);
+        line.className = i < n ? 'step-line done' : 'step-line';
+      }
+    }
+
+    function goToStep2() {
+      const name = document.getElementById('full_name').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      if (!name) { showToast('Please enter your full name', 'error'); return; }
+      if (!phone || phone.length < 9) {
+        showToast('Please enter a valid phone number', 'error'); return;
+      }
+      goToStep(2);
+    }
+
+    function goToStep3() {
+      const district = document.getElementById('district').value;
+      if (!district) { showToast('Please select your district', 'error'); return; }
+      goToStep(3);
+      setupPinInputs();
+    }
+
+    function setupPinInputs() {
+      // Register PIN auto-advance
+      document.querySelectorAll('.reg-pin').forEach((box, i, boxes) => {
+        box.addEventListener('input', () => {
+          if (box.value && i < boxes.length - 1) boxes[i+1].focus();
+        });
+        box.addEventListener('keydown', e => {
+          if (e.key === 'Backspace' && !box.value && i > 0) boxes[i-1].focus();
+        });
+      });
+      // Confirm PIN auto-advance
+      document.querySelectorAll('.conf-pin').forEach((box, i, boxes) => {
+        box.addEventListener('input', () => {
+          if (box.value && i < boxes.length - 1) boxes[i+1].focus();
+        });
+        box.addEventListener('keydown', e => {
+          if (e.key === 'Backspace' && !box.value && i > 0) boxes[i-1].focus();
+        });
+      });
+    }
+
+    async function handleRegister() {
+      const full_name = document.getElementById('full_name').value.trim();
+      const phone = '+256' + document.getElementById('phone').value.trim();
+      const district = document.getElementById('district').value;
+      const role = document.getElementById('role').value;
+      const pin = ['rp1','rp2','rp3','rp4'].map(id =>
+        document.getElementById(id).value).join('');
+      const confirmPin = ['cp1','cp2','cp3','cp4'].map(id =>
+        document.getElementById(id).value).join('');
+
+      if (pin.length < 4) {
+        showToast('Please enter a 4-digit PIN', 'error'); return;
+      }
+      if (pin !== confirmPin) {
+        showToast('PINs do not match!', 'error'); return;
+      }
+
+      const btn = document.getElementById('registerBtn');
+      btn.innerHTML = '<span class="spinner"></span> Creating account...';
+      btn.disabled = true;
+
+      try {
+        const data = await apiCall('/auth/register', 'POST', {
+          full_name, phone, pin, role, district
+        });
+
+        if (data.success) {
+          showToast('Account created! Please login 🌿');
+          setTimeout(() => window.location.href = 'login.html', 1500);
+        } else {
+          showToast(data.message || 'Registration failed', 'error');
+          btn.innerHTML = 'Create Account 🌿';
+          btn.disabled = false;
+        }
+      } catch (err) {
+        showToast('Connection error. Is the server running?', 'error');
+        btn.innerHTML = 'Create Account 🌿';
+        btn.disabled = false;
+      }
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Balugu Yo — Yam Harvest Prediction</title>
+  <link rel="stylesheet" href="css/style.css"/>
+  <style>
+    body {
+      background: linear-gradient(160deg, #1B5E20 0%, #2E7D32 50%, #00897B 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .welcome-card {
+      background: rgba(255,255,255,0.08);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 24px;
+      padding: 48px 32px;
+      text-align: center;
+      max-width: 400px;
+      width: 100%;
+    }
+
+    .app-icon {
+      font-size: 72px;
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .app-name {
+      font-family: 'Poppins', sans-serif;
+      font-size: 36px;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 8px;
+    }
+
+    .app-tagline {
+      font-size: 15px;
+      color: rgba(255,255,255,0.8);
+      line-height: 1.6;
+      margin-bottom: 40px;
+    }
+
+    .welcome-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .btn-white {
+      background: white;
+      color: var(--primary-dark);
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      padding: 14px;
+      border-radius: 12px;
+      border: none;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+      width: 100%;
+    }
+
+    .btn-white:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: white;
+      border: 2px solid rgba(255,255,255,0.5);
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      padding: 14px;
+      border-radius: 12px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+      width: 100%;
+    }
+
+    .btn-ghost:hover {
+      background: rgba(255,255,255,0.1);
+      border-color: white;
+    }
+
+    .features {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+
+    .feature-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      color: rgba(255,255,255,0.85);
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .feature-item span {
+      font-size: 28px;
+    }
+
+    .version {
+      margin-top: 24px;
+      color: rgba(255,255,255,0.4);
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="welcome-card">
+    <span class="app-icon">🌿</span>
+    <h1 class="app-name">Balugu Yo</h1>
+    <p class="app-tagline">
+      Know exactly when to harvest your climbing yams.<br/>
+      Powered by data. Built for Uganda farmers.
+    </p>
+
+    <div class="features">
+      <div class="feature-item">
+        <span>📅</span>
+        Harvest Date
+      </div>
+      <div class="feature-item">
+        <span>🌧️</span>
+        Weather Data
+      </div>
+      <div class="feature-item">
+        <span>🔔</span>
+        Smart Alerts
+      </div>
+    </div>
+
+    <div class="welcome-buttons">
+      <button class="btn-white" onclick="window.location.href='register.html'">
+        🌱 Get Started — Register
+      </button>
+      <button class="btn-ghost" onclick="window.location.href='login.html'">
+        I already have an account
+      </button>
+    </div>
+
+    <p class="version">Balugu Yo v1.0 — Makerere University 2025</p>
+  </div>
+
+  <script src="js/auth.js"></script>
+  <script>
+    // Redirect if already logged in
+    redirectIfLoggedIn();
+  </script>
+
+</body>
+</html>

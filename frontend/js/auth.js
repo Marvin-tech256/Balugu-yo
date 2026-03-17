@@ -1,6 +1,6 @@
 // frontend/js/auth.js
 
-const API = 'http://localhost:5000/api';
+const API = 'https://balugu-yo-api.onrender.com/api';
 
 // Save token and user to localStorage
 const saveAuth = (token, user) => {

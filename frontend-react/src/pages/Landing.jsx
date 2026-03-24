@@ -93,7 +93,7 @@ export default function Landing() {
                 {/* Trust badge */}
                 <div className="anim-scale-in" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(22,163,74,0.15)', border: '1px solid rgba(22,163,74,0.35)', borderRadius: 20, padding: '5px 14px', marginBottom: 24 }}>
                     <CheckCircle size={12} color="#6ee7b7" />
-                    <span style={{ fontSize: 11, fontWeight: 600, color: '#6ee7b7', letterSpacing: 0.8 }}>TRUSTED BY UGANDAN FARMERS · MAKERERE UNIVERSITY 2025</span>
+                    <span style={{ fontSize: 11, fontWeight: 600, color: '#6ee7b7', letterSpacing: 0.8 }}>TRUSTED BY UGANDAN FARMERS</span>
                 </div>
 
                 {/* Main headline */}

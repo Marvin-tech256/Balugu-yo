@@ -135,7 +135,7 @@ export default function AddPlanting() {
                                     <span style={{ fontSize: 11, fontWeight: 600, color: '#6ee7b7', textTransform: 'uppercase', letterSpacing: 0.5 }}>Prediction Ready</span>
                                 </div>
                                 <div style={{ fontFamily: 'Poppins', fontSize: 26, fontWeight: 700, marginBottom: 4 }}>
-                                    {prediction.predicted_harvest_date}
+                                    {new Date(prediction.predicted_harvest_date).toLocaleDateString('en-UG', { day: 'numeric', month: 'long', year: 'numeric' })}
                                 </div>
                                 <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.75)', marginBottom: 16 }}>
                                     {prediction.days_remaining > 0 ? `In ${prediction.days_remaining} days` : 'Check planting date'}

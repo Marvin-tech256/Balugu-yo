@@ -40,6 +40,15 @@ const User = {
        FROM users ORDER BY created_at DESC`
     );
     return rows;
+  },
+
+  // Update PIN hash
+  updatePin: async (user_id, pin_hash) => {
+    const [result] = await db.execute(
+      `UPDATE users SET pin_hash = ? WHERE user_id = ?`,
+      [pin_hash, user_id]
+    );
+    return result;
   }
 
 };

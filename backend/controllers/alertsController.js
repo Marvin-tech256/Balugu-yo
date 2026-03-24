@@ -84,8 +84,8 @@ const checkHarvestAlerts = async (req, res) => {
       if (daysLeft <= 30 && daysLeft > 27) {
         await Notification.create({
           user_id: req.user.user_id,
-          title: '🌿 Harvest in 30 Days!',
-          message: `Your ${pred.yam_variety} on ${pred.farm_name} is due for harvest around ${pred.predicted_harvest_date}. Start preparing your tools and storage.`,
+          title: 'Harvest in 30 Days',
+          message: `Your ${pred.yam_variety} on ${pred.farm_name} is due for harvest around ${new Date(pred.predicted_harvest_date).toLocaleDateString('en-UG', { day: 'numeric', month: 'short', year: 'numeric' })}. Start preparing your tools and storage.`,
           type: 'harvest'
         });
         alertsCreated.push('30-day alert');
@@ -95,8 +95,8 @@ const checkHarvestAlerts = async (req, res) => {
       if (daysLeft <= 14 && daysLeft > 11) {
         await Notification.create({
           user_id: req.user.user_id,
-          title: '⚠️ Harvest in 2 Weeks!',
-          message: `Your ${pred.yam_variety} on ${pred.farm_name} should be harvested by ${pred.predicted_harvest_date}. Check vine condition and prepare harvest team.`,
+          title: 'Harvest in 2 Weeks',
+          message: `Your ${pred.yam_variety} on ${pred.farm_name} should be harvested by ${new Date(pred.predicted_harvest_date).toLocaleDateString('en-UG', { day: 'numeric', month: 'short', year: 'numeric' })}. Check vine condition and prepare harvest team.`,
           type: 'harvest'
         });
         alertsCreated.push('14-day alert');
@@ -106,8 +106,8 @@ const checkHarvestAlerts = async (req, res) => {
       if (daysLeft <= 7 && daysLeft > 4) {
         await Notification.create({
           user_id: req.user.user_id,
-          title: '🚨 Harvest This Week!',
-          message: `URGENT: Your ${pred.yam_variety} on ${pred.farm_name} is ready for harvest this week! Optimal harvest date: ${pred.predicted_harvest_date}.`,
+          title: 'Harvest This Week',
+          message: `URGENT: Your ${pred.yam_variety} on ${pred.farm_name} is ready for harvest this week. Optimal harvest date: ${new Date(pred.predicted_harvest_date).toLocaleDateString('en-UG', { day: 'numeric', month: 'short', year: 'numeric' })}.`,
           type: 'harvest'
         });
         alertsCreated.push('7-day alert');
@@ -131,7 +131,7 @@ const sendTestNotification = async (req, res) => {
   try {
     await Notification.create({
       user_id: req.user.user_id,
-      title: '🌱 Welcome to Balugu Yo!',
+      title: 'Welcome to Balugu Yo',
       message: 'Your account is set up successfully. Add your first farm and planting to get your harvest prediction.',
       type: 'system'
     });

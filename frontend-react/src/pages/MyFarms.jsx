@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Plus, Search, Wheat, Trash2, Sprout, MapPin, Layers, X } from 'lucide-react'
+import { Plus, Search, Wheat, Trash2, Sprout, MapPin, Layers, X, History, ChevronDown } from 'lucide-react'
 import Layout from '../components/Layout'
 import { useToast } from '../components/Toast'
 import api from '../api'
@@ -11,14 +11,19 @@ const SOILS = [{ val: 'loam', label: 'Loam' }, { val: 'clay', label: 'Clay' }, {
 export default function MyFarms() {
     const navigate = useNavigate()
     const showToast = useToast()
+    const [tab, setTab] = useState('farms') // 'farms' | 'history'
     const [allFarms, setAllFarms] = useState([])
     const [filtered, setFiltered] = useState([])
+    const [plantings, setPlantings] = useState([])
     const [search, setSearch] = useState('')
     const [modalOpen, setModalOpen] = useState(false)
     const [form, setForm] = useState({ farm_name: '', district: '', location: '', size_acres: '', soil_type: 'loam' })
     const [loading, setLoading] = useState(false)
 
     useEffect(() => { loadFarms() }, [])
+    useEffect(() => {
+        if (tab === 'history' && plantings.length === 0) loadHistory()
+    }, [tab])
     useEffect(() => {
         const q = search.toLowerCase()
         setFiltered(allFarms.filter(f =>
@@ -36,9 +41,15 @@ export default function MyFarms() {
         setAllFarms(unique)
     }
 
+    async function loadHistory() {
+        const data = await api.get('/predictions/my-plantings')
+        if (data.success) setPlantings(data.plantings || [])
+    }
+
     const set = (k, v) => setForm(f => ({ ...f, [k]: v }))
     const totalAcres = allFarms.reduce((s, f) => s + parseFloat(f.size_acres || 0), 0).toFixed(1)
     const harvestSoon = allFarms.filter(f => f.days_remaining && f.days_remaining <= 30 && f.days_remaining > 0).length
+    const fmtDate = d => d ? new Date(d).toLocaleDateString('en-UG', { day: 'numeric', month: 'short', year: 'numeric' }) : null
 
     async function handleAddFarm() {
         if (!form.farm_name.trim()) { showToast('Enter a farm name', 'error'); return }
@@ -75,9 +86,19 @@ export default function MyFarms() {
                     </button>
                 </div>
 
-                {/* Stats row */}
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 12, marginBottom: 20 }}>
-                    {[
+                {/* Tabs */}
+                <div style={{ display: 'flex', gap: 4, marginBottom: 20, background: 'var(--surface-2)', borderRadius: 10, padding: 4, width: 'fit-content' }}>
+                    {[{ id: 'farms', label: 'Farms', icon: Wheat }, { id: 'history', label: 'Planting History', icon: History }].map(t => (
+                        <button key={t.id} onClick={() => setTab(t.id)}
+                            style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '7px 14px', borderRadius: 8, border: 'none', fontSize: 13, fontWeight: 500, cursor: 'pointer', transition: 'all 0.15s', background: tab === t.id ? 'white' : 'transparent', color: tab === t.id ? 'var(--text)' : 'var(--text-muted)', boxShadow: tab === t.id ? 'var(--shadow-sm)' : 'none' }}>
+                            <t.icon size={14} /> {t.label}
+                        </button>
+                    ))}
+                </div>
+
+                {/* Stats row — only on farms tab */}
+                {tab === 'farms' && <>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 12, marginBottom: 20 }}>                    {[
                         { value: allFarms.length, label: 'Total Farms', color: 'var(--primary)', bg: 'var(--primary-bg)' },
                         { value: totalAcres, label: 'Total Acres', color: 'var(--teal)', bg: 'var(--teal-light)' },
                         { value: harvestSoon, label: 'Harvest Soon', color: 'var(--gold)', bg: 'var(--gold-light)' },
@@ -87,74 +108,113 @@ export default function MyFarms() {
                             <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 2 }}>{label}</div>
                         </div>
                     ))}
-                </div>
-
-                {/* Search */}
-                <div style={{ position: 'relative', marginBottom: 16 }}>
-                    <Search size={15} style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
-                    <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search farms..."
-                        className="form-input" style={{ paddingLeft: 36 }} />
-                </div>
-
-                {/* Farm list */}
-                {filtered.length === 0 ? (
-                    <div className="card empty-state" style={{ padding: '48px 20px' }}>
-                        <Wheat size={40} color="var(--border)" style={{ marginBottom: 12 }} />
-                        <div style={{ fontSize: 15, fontWeight: 600, color: 'var(--text-2)', marginBottom: 6 }}>No farms yet</div>
-                        <div style={{ fontSize: 13, color: 'var(--text-muted)', marginBottom: 16 }}>Add your first farm to get started</div>
-                        <button onClick={() => setModalOpen(true)} className="btn btn-primary"><Plus size={14} /> Add Farm</button>
                     </div>
-                ) : (
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 12 }}>
-                        {filtered.map(f => {
-                            const soon = f.days_remaining && f.days_remaining <= 30 && f.days_remaining > 0
-                            return (
-                                <div key={f.farm_id} className="card" style={{ padding: 16, borderLeft: `3px solid ${soon ? 'var(--gold)' : 'var(--primary)'}` }}>
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 10 }}>
+
+                    {/* Search */}
+                    <div style={{ position: 'relative', marginBottom: 16 }}>
+                        <Search size={15} style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+                        <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search farms..."
+                            className="form-input" style={{ paddingLeft: 36 }} />
+                    </div>
+
+                    {/* Farm list */}
+                    {filtered.length === 0 ? (
+                        <div className="card empty-state" style={{ padding: '48px 20px' }}>
+                            <Wheat size={40} color="var(--border)" style={{ marginBottom: 12 }} />
+                            <div style={{ fontSize: 15, fontWeight: 600, color: 'var(--text-2)', marginBottom: 6 }}>No farms yet</div>
+                            <div style={{ fontSize: 13, color: 'var(--text-muted)', marginBottom: 16 }}>Add your first farm to get started</div>
+                            <button onClick={() => setModalOpen(true)} className="btn btn-primary"><Plus size={14} /> Add Farm</button>
+                        </div>
+                    ) : (
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 12 }}>
+                            {filtered.map(f => {
+                                const soon = f.days_remaining && f.days_remaining <= 30 && f.days_remaining > 0
+                                return (
+                                    <div key={f.farm_id} className="card" style={{ padding: 16, borderLeft: `3px solid ${soon ? 'var(--gold)' : 'var(--primary)'}` }}>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 10 }}>
+                                            <div style={{ flex: 1, minWidth: 0 }}>
+                                                <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text)', marginBottom: 3, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{f.farm_name}</div>
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, color: 'var(--text-muted)' }}>
+                                                    <MapPin size={11} /> {f.location ? `${f.location}, ` : ''}{f.district}
+                                                </div>
+                                            </div>
+                                            <span className={`badge ${soon ? 'badge-amber' : 'badge-green'}`} style={{ marginLeft: 8, flexShrink: 0 }}>
+                                                {soon ? 'Soon' : 'Growing'}
+                                            </span>
+                                        </div>
+
+                                        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 12 }}>
+                                            <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 11, color: 'var(--text-muted)', background: 'var(--surface-2)', padding: '3px 8px', borderRadius: 20 }}>
+                                                <Layers size={10} /> {f.size_acres || '—'} acres
+                                            </span>
+                                            <span style={{ fontSize: 11, color: 'var(--text-muted)', background: 'var(--surface-2)', padding: '3px 8px', borderRadius: 20 }}>
+                                                {f.soil_type} soil
+                                            </span>
+                                            {f.yam_variety && (
+                                                <span style={{ fontSize: 11, color: 'var(--text-muted)', background: 'var(--surface-2)', padding: '3px 8px', borderRadius: 20 }}>
+                                                    {f.yam_variety}
+                                                </span>
+                                            )}
+                                        </div>
+
+                                        <div style={{ fontSize: 12, color: f.predicted_harvest_date ? (soon ? 'var(--gold-dark)' : 'var(--primary-mid)') : 'var(--text-muted)', marginBottom: 12, fontWeight: f.predicted_harvest_date ? 600 : 400 }}>
+                                            {f.predicted_harvest_date
+                                                ? `Harvest: ${fmtDate(f.predicted_harvest_date)} (${f.days_remaining}d)`
+                                                : 'No planting recorded'}
+                                        </div>
+
+                                        <div style={{ display: 'flex', gap: 8, paddingTop: 10, borderTop: '1px solid var(--border)' }}>
+                                            <button onClick={() => navigate('/add-planting?farm_id=' + f.farm_id)}
+                                                className="btn btn-ghost" style={{ flex: 1, fontSize: 12, padding: '6px 10px' }}>
+                                                <Sprout size={13} /> Plant
+                                            </button>
+                                            <button onClick={() => deleteFarm(f.farm_id, f.farm_name)}
+                                                className="btn btn-danger" style={{ padding: '6px 10px' }}>
+                                                <Trash2 size={13} />
+                                            </button>
+                                        </div>
+                                    </div>
+                                )
+                            })}
+                        </div>
+                    )}
+                </>}
+
+                {/* Planting History Tab */}
+                {tab === 'history' && (
+                    <div>
+                        {plantings.length === 0 ? (
+                            <div className="card empty-state" style={{ padding: '48px 20px' }}>
+                                <History size={36} color="var(--border)" style={{ marginBottom: 10 }} />
+                                <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-2)', marginBottom: 6 }}>No planting history yet</div>
+                                <div style={{ fontSize: 13, color: 'var(--text-muted)', marginBottom: 14 }}>Add a planting to start tracking your history</div>
+                                <button onClick={() => navigate('/add-planting')} className="btn btn-primary"><Sprout size={14} /> Add Planting</button>
+                            </div>
+                        ) : (
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                                {plantings.map(p => (
+                                    <div key={p.planting_id} className="card" style={{ padding: '14px 16px', display: 'flex', gap: 12, alignItems: 'center' }}>
+                                        <div style={{ width: 36, height: 36, borderRadius: 9, background: 'var(--primary-bg)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                                            <Sprout size={16} color="var(--primary)" />
+                                        </div>
                                         <div style={{ flex: 1, minWidth: 0 }}>
-                                            <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text)', marginBottom: 3, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{f.farm_name}</div>
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, color: 'var(--text-muted)' }}>
-                                                <MapPin size={11} /> {f.location ? `${f.location}, ` : ''}{f.district}
+                                            <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text)', marginBottom: 2 }}>{p.yam_variety || 'Unknown variety'}</div>
+                                            <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>
+                                                Planted: {fmtDate(p.planting_date)}
+                                                {p.farm_name && ` · ${p.farm_name}`}
+                                                {p.number_of_mounds && ` · ${p.number_of_mounds} mounds`}
                                             </div>
                                         </div>
-                                        <span className={`badge ${soon ? 'badge-amber' : 'badge-green'}`} style={{ marginLeft: 8, flexShrink: 0 }}>
-                                            {soon ? 'Soon' : 'Growing'}
-                                        </span>
-                                    </div>
-
-                                    <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 12 }}>
-                                        <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 11, color: 'var(--text-muted)', background: 'var(--surface-2)', padding: '3px 8px', borderRadius: 20 }}>
-                                            <Layers size={10} /> {f.size_acres || '—'} acres
-                                        </span>
-                                        <span style={{ fontSize: 11, color: 'var(--text-muted)', background: 'var(--surface-2)', padding: '3px 8px', borderRadius: 20 }}>
-                                            {f.soil_type} soil
-                                        </span>
-                                        {f.yam_variety && (
-                                            <span style={{ fontSize: 11, color: 'var(--text-muted)', background: 'var(--surface-2)', padding: '3px 8px', borderRadius: 20 }}>
-                                                {f.yam_variety}
-                                            </span>
+                                        {p.predicted_harvest_date && (
+                                            <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                                                <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--primary-mid)' }}>{fmtDate(p.predicted_harvest_date)}</div>
+                                                <div style={{ fontSize: 10, color: 'var(--text-muted)' }}>{p.days_remaining > 0 ? `${p.days_remaining}d left` : 'Harvested'}</div>
+                                            </div>
                                         )}
                                     </div>
-
-                                    <div style={{ fontSize: 12, color: f.predicted_harvest_date ? (soon ? 'var(--gold-dark)' : 'var(--primary-mid)') : 'var(--text-muted)', marginBottom: 12, fontWeight: f.predicted_harvest_date ? 600 : 400 }}>
-                                        {f.predicted_harvest_date
-                                            ? `Harvest: ${f.predicted_harvest_date} (${f.days_remaining}d)`
-                                            : 'No planting recorded'}
-                                    </div>
-
-                                    <div style={{ display: 'flex', gap: 8, paddingTop: 10, borderTop: '1px solid var(--border)' }}>
-                                        <button onClick={() => navigate('/add-planting?farm_id=' + f.farm_id)}
-                                            className="btn btn-ghost" style={{ flex: 1, fontSize: 12, padding: '6px 10px' }}>
-                                            <Sprout size={13} /> Plant
-                                        </button>
-                                        <button onClick={() => deleteFarm(f.farm_id, f.farm_name)}
-                                            className="btn btn-danger" style={{ padding: '6px 10px' }}>
-                                            <Trash2 size={13} />
-                                        </button>
-                                    </div>
-                                </div>
-                            )
-                        })}
+                                ))}
+                            </div>
+                        )}
                     </div>
                 )}
             </div>

@@ -40,6 +40,7 @@ export default function Dashboard() {
   }
 
   const alertDot = { harvest: 'var(--primary)', weather: 'var(--teal)', warning: 'var(--gold)', system: 'var(--text-muted)' }
+  const fmtDate = d => d ? new Date(d).toLocaleDateString('en-UG', { day: 'numeric', month: 'short', year: 'numeric' }) : null
 
   return (
     <Layout notifCount={notifCount}>
@@ -78,6 +79,9 @@ export default function Dashboard() {
                   <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 14, fontSize: 13, color: 'rgba(255,255,255,0.7)' }}>
                     <MapPin size={12} />
                     {prediction.farm_name} · {prediction.yam_variety}
+                  </div>
+                  <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', marginBottom: 8 }}>
+                    Harvest: {fmtDate(prediction.predicted_harvest_date)}
                   </div>
                   <div style={{ background: 'rgba(255,255,255,0.1)', borderRadius: 20, height: 6, marginBottom: 6 }}>
                     <div style={{ background: 'linear-gradient(90deg, #6ee7b7, #34d399)', borderRadius: 20, height: 6, width: Math.min(Math.round(((270 - prediction.days_remaining) / 270) * 100), 100) + '%', transition: 'width 1s ease' }} />

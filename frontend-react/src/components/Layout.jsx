@@ -4,33 +4,35 @@ import Sidebar from './Sidebar'
 import BottomNav from './BottomNav'
 
 export default function Layout({ children, notifCount = 0 }) {
-    const [sheetOpen, setSheetOpen] = useState(false)
+    const [collapsed, setCollapsed] = useState(false)
+    const sidebarW = collapsed ? 'var(--sidebar-collapsed)' : 'var(--sidebar-w)'
 
     return (
         <div style={{ minHeight: '100vh', background: 'var(--bg)' }}>
             {/* Desktop sidebar */}
-            <div style={{ display: 'none' }} className="sidebar-wrapper">
-                <Sidebar />
+            <div className="desktop-only">
+                <Sidebar collapsed={collapsed} onToggle={() => setCollapsed(c => !c)} />
             </div>
 
-            {/* Top navbar (passes sheet open handler) */}
-            <Navbar notifCount={notifCount} sheetOpen={sheetOpen} setSheetOpen={setSheetOpen} />
+            {/* Content area */}
+            <div className="desktop-only" style={{ marginLeft: sidebarW, transition: 'margin-left 0.25s cubic-bezier(0.4,0,0.2,1)' }}>
+                <Navbar notifCount={notifCount} sidebarW={sidebarW} />
+                <main>{children}</main>
+            </div>
 
-            {/* Main content — offset for desktop sidebar */}
-            <main style={{ paddingBottom: 80 }}>
-                {children}
-            </main>
-
-            {/* Mobile bottom nav */}
+            {/* Mobile layout */}
             <div className="mobile-only">
-                <BottomNav onProfileClick={() => setSheetOpen(true)} />
+                <Navbar notifCount={notifCount} />
+                <main style={{ paddingBottom: 64 }}>{children}</main>
+                <BottomNav />
             </div>
 
             <style>{`
+        .desktop-only { display: none; }
+        .mobile-only { display: block; }
         @media (min-width: 768px) {
-          .sidebar-wrapper { display: block !important; }
-          .mobile-only { display: none !important; }
-          main { margin-left: 240px; padding-bottom: 40px; }
+          .desktop-only { display: block; }
+          .mobile-only { display: none; }
         }
       `}</style>
         </div>

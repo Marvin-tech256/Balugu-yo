@@ -179,7 +179,7 @@ export default function Landing() {
                 </div>
 
                 <p style={{ marginTop: 32, color: 'rgba(255,255,255,0.2)', fontSize: 11 }}>
-                    Balugu Yo v1.0 · Group 8 · Makerere University 2025
+                    Balugu Yo v1.0
                 </p>
             </div>
         </div>

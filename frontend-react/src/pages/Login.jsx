@@ -153,9 +153,7 @@ export default function Login() {
                         <Link to="/register" style={{ color: 'var(--primary)', fontWeight: 600 }}>Create account</Link>
                     </p>
 
-                    <p style={{ textAlign: 'center', marginTop: 32, fontSize: 11, color: 'var(--text-muted)' }}>
-                        Makerere University · Group 8 · 2025
-                    </p>
+
                 </div>
             </div>
         </div>

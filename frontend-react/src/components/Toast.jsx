@@ -26,7 +26,11 @@ export function ToastProvider({ children }) {
                     </div>
                 ))}
             </div>
+<<<<<<< HEAD
             <style>{`@keyframes slideIn { from { transform: translateX(100%); opacity:0 } to { transform: translateX(0); opacity:1 } }`}</style>
+=======
+            <style>{`@keyframes slideIn { from{transform:translateX(100%);opacity:0} to{transform:translateX(0);opacity:1} }`}</style>
+>>>>>>> main
         </ToastContext.Provider>
     )
 }

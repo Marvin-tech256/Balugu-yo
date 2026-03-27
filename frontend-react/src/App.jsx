@@ -23,10 +23,19 @@ function PrivateRoute({ children, roles }) {
 
 function PublicRoute({ children }) {
     const { user } = useAuth()
+<<<<<<< HEAD
     if (!user) return children
     if (user.role === 'admin') return <Navigate to="/admin" replace />
     if (user.role === 'extension_officer') return <Navigate to="/ext-dashboard" replace />
     return <Navigate to="/dashboard" replace />
+=======
+    if (user) {
+        if (user.role === 'admin') return <Navigate to="/admin" replace />
+        if (user.role === 'extension_officer') return <Navigate to="/ext-dashboard" replace />
+        return <Navigate to="/dashboard" replace />
+    }
+    return children
+>>>>>>> main
 }
 
 export default function App() {
@@ -38,9 +47,15 @@ export default function App() {
                         <Route path="/" element={<PublicRoute><Landing /></PublicRoute>} />
                         <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
                         <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
+<<<<<<< HEAD
                         <Route path="/dashboard" element={<PrivateRoute roles={['farmer']}><Dashboard /></PrivateRoute>} />
                         <Route path="/my-farms" element={<PrivateRoute roles={['farmer']}><MyFarms /></PrivateRoute>} />
                         <Route path="/add-planting" element={<PrivateRoute roles={['farmer']}><AddPlanting /></PrivateRoute>} />
+=======
+                        <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+                        <Route path="/my-farms" element={<PrivateRoute><MyFarms /></PrivateRoute>} />
+                        <Route path="/add-planting" element={<PrivateRoute><AddPlanting /></PrivateRoute>} />
+>>>>>>> main
                         <Route path="/weather" element={<PrivateRoute><Weather /></PrivateRoute>} />
                         <Route path="/alerts" element={<PrivateRoute><Alerts /></PrivateRoute>} />
                         <Route path="/admin" element={<PrivateRoute roles={['admin']}><Admin /></PrivateRoute>} />

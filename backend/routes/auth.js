@@ -1,8 +1,8 @@
 // backend/routes/auth.js
 const express = require('express');
 const router = express.Router();
-const { register, login, getMe, logout } = require('../controllers/authController');
-const { protect } = require('../middleware/auth');
+const { register, login, getMe, logout, changePin, adminStats, getAllUsers } = require('../controllers/authController');
+const { protect, adminOnly } = require('../middleware/auth');
 
 // Public routes
 router.post('/register', register);
@@ -11,5 +11,10 @@ router.post('/login', login);
 // Protected routes
 router.get('/me', protect, getMe);
 router.post('/logout', protect, logout);
+router.post('/change-pin', protect, changePin);
+
+// Admin routes
+router.get('/admin/stats', protect, adminOnly, adminStats);
+router.get('/admin/users', protect, adminOnly, getAllUsers);
 
 module.exports = router;

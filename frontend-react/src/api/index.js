@@ -11,7 +11,13 @@ api.interceptors.request.use((config) => {
 })
 
 api.interceptors.response.use(
-    (res) => res.data,
+    (res) => {
+        // Detect HTML response (Render cold start / security checkpoint)
+        if (typeof res.data === 'string' && res.data.includes('<!DOCTYPE')) {
+            return Promise.reject({ message: 'Server is waking up, please try again in a moment.' })
+        }
+        return res.data
+    },
     (err) => Promise.reject(err.response?.data || err)
 )
 

@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const api = axios.create({
-    baseURL: 'https://balugu-yo-api.onrender.com/api',
+    baseURL: 'https://balugu-yo.onrender.com/api',
 })
 
 api.interceptors.request.use((config) => {

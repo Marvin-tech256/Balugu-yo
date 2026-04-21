@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Search, Users, Wheat, Sprout, BarChart3, Phone, LogOut } from 'lucide-react'import { useAuth } from '../context/AuthContext'
+import { Search, Users, Wheat, Sprout, BarChart3, Phone, LogOut } from 'lucide-react'
+import { useAuth } from '../context/AuthContext'
 import { useToast } from '../components/Toast'
 import api from '../api'
 

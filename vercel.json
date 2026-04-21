@@ -1,7 +1,8 @@
 {
     "version": 2,
-    "buildCommand": "cd frontend-react && npm install && npm run build",
-    "outputDirectory": "frontend-react/dist",
+    "rootDirectory": "frontend-react",
+    "buildCommand": "npm install && npm run build",
+    "outputDirectory": "dist",
     "installCommand": "echo 'skip'",
     "framework": "vite",
     "rewrites": [

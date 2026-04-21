@@ -1,0 +1,16 @@
+{
+  "name": "balugu-yo",
+  "version": "1.0.0",
+  "description": "Balugu-yo - Agricultural Intelligence Platform",
+  "private": true,
+  "workspaces": [
+    "backend",
+    "frontend-react"
+  ],
+  "scripts": {
+    "install-all": "npm install && npm --workspace=backend install && npm --workspace=frontend-react install",
+    "build": "npm --workspace=frontend-react run build",
+    "dev": "npm --workspace=backend start & npm --workspace=frontend-react run dev",
+    "start": "npm --workspace=backend start"
+  }
+}

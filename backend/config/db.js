@@ -28,6 +28,8 @@ if (process.env.NODE_ENV !== 'test') {
         port: process.env.DB_PORT,
         user: process.env.DB_USER,
         database: process.env.DB_NAME,
+        password_set: !!process.env.DB_PASSWORD,
+        password_length: process.env.DB_PASSWORD?.length,
       });
       return;
     }

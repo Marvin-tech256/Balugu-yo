@@ -13,7 +13,10 @@ const pool = mysql.createPool({
   waitForConnections: true,
   connectionLimit:    10,
   queueLimit:         0,
-  charset:            'utf8mb4'
+  charset:            'utf8mb4',
+  ssl:                process.env.DB_HOST && !process.env.DB_HOST.includes('localhost')
+                        ? { rejectUnauthorized: false }
+                        : false,
 });
 
 // Test the connection only when not in test mode
@@ -21,6 +24,12 @@ if (process.env.NODE_ENV !== 'test') {
   pool.getConnection((err, connection) => {
     if (err) {
       console.error('Database connection failed:', err.message);
+      console.error('DB Config:', {
+        host: process.env.DB_HOST,
+        port: process.env.DB_PORT,
+        user: process.env.DB_USER,
+        database: process.env.DB_NAME,
+      });
       return;
     }
     console.log('Database connected successfully!');

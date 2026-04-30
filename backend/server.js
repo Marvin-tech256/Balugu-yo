@@ -61,24 +61,6 @@ app.use('/api/predictions', require('./routes/predictions'));
 app.use('/api/weather',     require('./routes/weather'));
 app.use('/api/alerts',      require('./routes/alerts'));
 
-// One-time schema setup endpoint
-app.get('/api/setup-db', async (req, res) => {
-  const fs = require('fs');
-  const path = require('path');
-  const db = require('./config/db');
-  try {
-    const schema = fs.readFileSync(path.join(__dirname, '../database/schema.sql'), 'utf8');
-    const statements = schema.split(';').filter(s => s.trim());
-    for (const stmt of statements) {
-      await db.execute(stmt);
-    }
-    const [tables] = await db.execute('SHOW TABLES');
-    res.json({ success: true, tables });
-  } catch (err) {
-    res.json({ success: false, error: err.message });
-  }
-});
-
 // Export app for testing
 module.exports = app;
 

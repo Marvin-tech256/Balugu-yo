@@ -27,6 +27,33 @@ app.get('/', (req, res) => {
   });
 });
 
+// Debug route — shows env vars and tests DB connection
+app.get('/debug', async (req, res) => {
+  const db = require('./config/db');
+  let dbStatus = 'unknown';
+  let dbError = null;
+  try {
+    await db.execute('SELECT 1');
+    dbStatus = 'connected';
+  } catch (e) {
+    dbStatus = 'failed';
+    dbError = e.message;
+  }
+  res.json({
+    env: {
+      MYSQL_URL_set:  !!process.env.MYSQL_URL,
+      DB_HOST:        process.env.DB_HOST,
+      DB_PORT:        process.env.DB_PORT,
+      DB_USER:        process.env.DB_USER,
+      DB_NAME:        process.env.DB_NAME,
+      password_set:   !!process.env.DB_PASSWORD,
+      JWT_SECRET_set: !!process.env.JWT_SECRET,
+      NODE_ENV:       process.env.NODE_ENV,
+    },
+    db: { status: dbStatus, error: dbError },
+  });
+});
+
 // Routes
 app.use('/api/auth',        require('./routes/auth'));
 app.use('/api/farms',       require('./routes/farms'));

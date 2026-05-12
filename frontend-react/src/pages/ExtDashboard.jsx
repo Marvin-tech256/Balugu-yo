@@ -59,11 +59,11 @@ export default function ExtDashboard() {
                     { icon: <Wheat size={22} color="var(--gold)" />, val: stats.soon, label: 'Harvesting Soon', bg: 'var(--gold-light)' },
                     { icon: <Sprout size={22} color="var(--teal)" />, val: stats.farms, label: 'Total Farms', bg: 'var(--teal-light)' },
                     { icon: <BarChart3 size={22} color="#7c3aed" />, val: '87%', label: 'Avg Accuracy', bg: '#ede9fe' }].map(s => (
-                        <div key={s.label} style={{ background: 'white', borderRadius: 'var(--radius)', padding: 16, display: 'flex', alignItems: 'center', gap: 12, boxShadow: 'var(--shadow)' }}>
-                            <div style={{ width: 44, height: 44, borderRadius: 12, background: s.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>{s.icon}</div>
-                            <div>
-                                <div style={{ fontFamily: 'Poppins', fontSize: 22, fontWeight: 700, lineHeight: 1, color: 'var(--text)' }}>{s.val}</div>
-                                <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 2 }}>{s.label}</div>
+                        <div key={s.label} style={{ background: 'white', borderRadius: 'var(--radius)', padding: '14px 12px', display: 'flex', alignItems: 'center', gap: 10, boxShadow: 'var(--shadow)', minWidth: 0 }}>
+                            <div style={{ width: 40, height: 40, borderRadius: 10, background: s.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>{s.icon}</div>
+                            <div style={{ minWidth: 0 }}>
+                                <div style={{ fontFamily: 'Poppins', fontSize: 'clamp(16px, 4vw, 22px)', fontWeight: 700, lineHeight: 1, color: 'var(--text)' }}>{s.val}</div>
+                                <div style={{ fontSize: 'clamp(10px, 2.5vw, 12px)', color: 'var(--text-muted)', marginTop: 2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{s.label}</div>
                             </div>
                         </div>
                     ))}

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Search, Users, Wheat, Sprout, Phone, LogOut } from 'lucide-react'
+import { Search, Users, Wheat, Sprout, BarChart3, Phone, LogOut } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import { useToast } from '../components/Toast'
 import api from '../api'
@@ -57,7 +57,8 @@ export default function ExtDashboard() {
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: 10 }}>
                     {[{ icon: <Users size={22} color="var(--primary)" />, val: stats.farmers, label: 'Total Farmers', bg: 'var(--primary-bg)' },
                     { icon: <Wheat size={22} color="var(--gold)" />, val: stats.soon, label: 'Harvesting Soon', bg: 'var(--gold-light)' },
-                    { icon: <Sprout size={22} color="var(--teal)" />, val: stats.farms, label: 'Total Farms', bg: 'var(--teal-light)' }].map(s => (
+                    { icon: <Sprout size={22} color="var(--teal)" />, val: stats.farms, label: 'Total Farms', bg: 'var(--teal-light)' },
+                    { icon: <BarChart3 size={22} color="#7c3aed" />, val: '87%', label: 'Avg Accuracy', bg: '#ede9fe' }].map(s => (
                         <div key={s.label} style={{ background: 'white', borderRadius: 'var(--radius)', padding: 16, display: 'flex', alignItems: 'center', gap: 12, boxShadow: 'var(--shadow)' }}>
                             <div style={{ width: 44, height: 44, borderRadius: 12, background: s.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>{s.icon}</div>
                             <div>
@@ -66,23 +67,6 @@ export default function ExtDashboard() {
                             </div>
                         </div>
                     ))}
-                    {/* Accuracy ring */}
-                    <div style={{ background: 'white', borderRadius: 'var(--radius)', padding: 16, display: 'flex', alignItems: 'center', gap: 12, boxShadow: 'var(--shadow)' }}>
-                        <div style={{ flexShrink: 0 }}>
-                            <svg width={48} height={48} viewBox="0 0 48 48">
-                                <circle cx={24} cy={24} r={20} fill="none" stroke="#ede9fe" strokeWidth={5} />
-                                <circle cx={24} cy={24} r={20} fill="none" stroke="#7c3aed" strokeWidth={5}
-                                    strokeDasharray={`${2 * Math.PI * 20 * 0.87} ${2 * Math.PI * 20}`}
-                                    strokeLinecap="round"
-                                    transform="rotate(-90 24 24)" />
-                                <text x={24} y={28} textAnchor="middle" fontSize={11} fontWeight={700} fill="#7c3aed">87%</text>
-                            </svg>
-                        </div>
-                        <div>
-                            <div style={{ fontFamily: 'Poppins', fontSize: 22, fontWeight: 700, lineHeight: 1, color: 'var(--text)' }}>87%</div>
-                            <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 2 }}>Avg Accuracy</div>
-                        </div>
-                    </div>
                 </div>
             </div>
 

@@ -55,15 +55,15 @@ export default function ExtDashboard() {
                     </div>
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: 10 }}>
-                    {[{ icon: <Users size={22} color="#2E7D32" />, val: stats.farmers, label: 'Total Farmers', bg: '#E8F5E9' },
-                    { icon: <Wheat size={22} color="#F57F17" />, val: stats.soon, label: 'Harvesting Soon', bg: '#FFF8E1' },
-                    { icon: <Sprout size={22} color="#00897B" />, val: stats.farms, label: 'Total Farms', bg: '#E0F2F1' },
-                    { icon: <BarChart3 size={22} color="#1565C0" />, val: '87%', label: 'Avg Accuracy', bg: '#E3F2FD' }].map(s => (
+                    {[{ icon: <Users size={22} color="var(--primary)" />, val: stats.farmers, label: 'Total Farmers', bg: 'var(--primary-bg)' },
+                    { icon: <Wheat size={22} color="var(--gold)" />, val: stats.soon, label: 'Harvesting Soon', bg: 'var(--gold-light)' },
+                    { icon: <Sprout size={22} color="var(--teal)" />, val: stats.farms, label: 'Total Farms', bg: 'var(--teal-light)' },
+                    { icon: <BarChart3 size={22} color="#7c3aed" />, val: '87%', label: 'Avg Accuracy', bg: '#ede9fe' }].map(s => (
                         <div key={s.label} style={{ background: 'white', borderRadius: 'var(--radius)', padding: 16, display: 'flex', alignItems: 'center', gap: 12, boxShadow: 'var(--shadow)' }}>
                             <div style={{ width: 44, height: 44, borderRadius: 12, background: s.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>{s.icon}</div>
                             <div>
-                                <div style={{ fontFamily: 'Poppins', fontSize: 22, fontWeight: 700, lineHeight: 1 }}>{s.val}</div>
-                                <div style={{ fontSize: 12, color: 'var(--text-gray)', marginTop: 2 }}>{s.label}</div>
+                                <div style={{ fontFamily: 'Poppins', fontSize: 22, fontWeight: 700, lineHeight: 1, color: 'var(--text)' }}>{s.val}</div>
+                                <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 2 }}>{s.label}</div>
                             </div>
                         </div>
                     ))}
@@ -90,7 +90,7 @@ export default function ExtDashboard() {
                     {/* District filter */}
                     <div style={{ display: 'flex', gap: 8, overflowX: 'auto', marginBottom: 16, scrollbarWidth: 'none' }}>
                         {['all', ...districts].map(d => (
-                            <button key={d} onClick={() => setDistrict(d)} style={{ padding: '7px 14px', borderRadius: 20, border: `1.5px solid ${district === d ? 'var(--accent)' : 'var(--border)'}`, background: district === d ? '#E0F2F1' : 'white', color: district === d ? 'var(--accent)' : 'var(--text-gray)', fontSize: 12, fontWeight: district === d ? 700 : 500, cursor: 'pointer', whiteSpace: 'nowrap' }}>
+                            <button key={d} onClick={() => setDistrict(d)} style={{ padding: '7px 14px', borderRadius: 20, border: `1.5px solid ${district === d ? 'var(--teal)' : 'var(--border)'}`, background: district === d ? 'var(--teal-light)' : 'white', color: district === d ? 'var(--teal)' : 'var(--text-muted)', fontSize: 12, fontWeight: district === d ? 700 : 500, cursor: 'pointer', whiteSpace: 'nowrap' }}>
                                 {d === 'all' ? 'All Districts' : d}
                             </button>
                         ))}
@@ -108,11 +108,11 @@ export default function ExtDashboard() {
                     ) : filtered.map(f => {
                         const nearest = f.farms.filter(fm => fm.days_remaining > 0).sort((a, b) => a.days_remaining - b.days_remaining)[0]
                         return (
-                            <div key={f.user_id} style={{ background: 'white', borderRadius: 'var(--radius)', padding: 16, boxShadow: 'var(--shadow)', marginBottom: 12, borderLeft: '4px solid var(--accent)' }}>
+                            <div key={f.user_id} style={{ background: 'white', borderRadius: 'var(--radius)', padding: 16, boxShadow: 'var(--shadow)', marginBottom: 12, borderLeft: '4px solid var(--teal)' }}>
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 10 }}>
                                     <div>
                                         <div style={{ fontFamily: 'Poppins', fontSize: 15, fontWeight: 600, marginBottom: 3 }}>{f.full_name}</div>
-                                        <div style={{ fontSize: 12, color: 'var(--text-gray)' }}>{f.district || 'Unknown'} • {f.phone}</div>
+                                        <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{f.district || 'Unknown'} • {f.phone}</div>
                                     </div>
                                     <span style={{ padding: '4px 12px', borderRadius: 20, fontSize: 12, fontWeight: 600, background: f.harvest_soon > 0 ? '#FFF8E1' : '#E8F5E9', color: f.harvest_soon > 0 ? '#F57F17' : 'var(--primary)' }}>
                                         {f.harvest_soon > 0 ? 'Harvest Soon' : 'Growing'}
@@ -127,10 +127,10 @@ export default function ExtDashboard() {
                                     ))}
                                 </div>
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: 10, borderTop: '1px solid var(--border)' }}>
-                                    <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--accent)' }}>
+                                    <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--teal)' }}>
                                         {nearest ? `Next harvest in ${nearest.days_remaining} days` : 'No active planting'}
                                     </div>
-                                    <a href={`tel:${f.phone}`} style={{ padding: '6px 14px', borderRadius: 20, background: '#E0F2F1', color: 'var(--accent)', fontSize: 12, fontWeight: 600, border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4, textDecoration: 'none' }}>
+                                    <a href={`tel:${f.phone}`} style={{ padding: '6px 14px', borderRadius: 20, background: 'var(--teal-light)', color: 'var(--teal)', fontSize: 12, fontWeight: 600, border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4, textDecoration: 'none' }}>
                                         <Phone size={12} /> Call
                                     </a>
                                 </div>
@@ -139,7 +139,7 @@ export default function ExtDashboard() {
                     })}
 
                     <div style={{ textAlign: 'center', paddingTop: 20 }}>
-                        <button onClick={handleLogout} style={{ background: 'none', border: '1px solid var(--border)', padding: '10px 24px', borderRadius: 20, color: 'var(--text-gray)', fontSize: 13, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+                        <button onClick={handleLogout} style={{ background: 'none', border: '1px solid var(--border)', padding: '10px 24px', borderRadius: 20, color: 'var(--text-muted)', fontSize: 13, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
                             <LogOut size={14} /> Logout
                         </button>
                     </div>

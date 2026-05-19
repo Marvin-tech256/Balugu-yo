@@ -111,7 +111,7 @@ export default function Login() {
                             <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '10px 12px', borderRight: '1px solid var(--border)', color: 'var(--text-muted)', fontSize: 13, fontWeight: 500, whiteSpace: 'nowrap', background: 'var(--surface-2)' }}>
                                 <Phone size={13} /> +256
                             </div>
-                            <input type="tel" value={phone} onChange={e => setPhone(e.target.value)} placeholder="700 000 000" maxLength={9}
+                            <input type="tel" value={phone} onChange={e => setPhone(e.target.value.replace(/[^0-9]/g, '').slice(0, 9))} placeholder="700 000 000" maxLength={9}
                                 onKeyDown={e => e.key === 'Enter' && pinRefs[0].current?.focus()}
                                 style={{ border: 'none', outline: 'none', padding: '10px 12px', fontSize: 14, flex: 1, background: 'white', color: 'var(--text)' }} />
                         </div>

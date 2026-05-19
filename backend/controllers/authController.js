@@ -3,52 +3,61 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
+// Validation helpers
+const VALID_ROLES = ['farmer', 'extension_officer', 'admin']
+const VALID_DISTRICTS = ['Buikwe', 'Bukunja', 'Mukono', 'Kampala', 'Jinja', 'Mbale', 'Masaka', 'Mbarara', 'Other']
+
+function validatePhone(phone) {
+  return /^\+256\d{9}$/.test(phone)
+}
+function validatePin(pin) {
+  return /^\d{4}$/.test(pin)
+}
+function validateName(name) {
+  return /^[a-zA-Z\s'\-]{2,100}$/.test(name.trim())
+}
+
 // REGISTER
 const register = async (req, res) => {
   try {
     const { full_name, phone, pin, role, district } = req.body;
 
-    // Check all fields are provided
-    if (!full_name || !phone || !pin || !district) {
-      return res.status(400).json({
-        success: false,
-        message: 'Please fill in all required fields'
-      });
-    }
+    if (!full_name || !phone || !pin || !district)
+      return res.status(400).json({ success: false, message: 'Please fill in all required fields' })
 
-    // Check if phone already exists
+    if (!validateName(full_name))
+      return res.status(400).json({ success: false, message: 'Name must contain letters only (2-100 characters)' })
+
+    if (!validatePhone(phone))
+      return res.status(400).json({ success: false, message: 'Phone must be in format +256XXXXXXXXX' })
+
+    if (!validatePin(pin))
+      return res.status(400).json({ success: false, message: 'PIN must be exactly 4 digits' })
+
+    if (role && !VALID_ROLES.includes(role))
+      return res.status(400).json({ success: false, message: 'Invalid role' })
+
+    if (!VALID_DISTRICTS.includes(district))
+      return res.status(400).json({ success: false, message: 'Invalid district selected' })
+
     const existingUser = await User.findByPhone(phone);
-    if (existingUser) {
-      return res.status(400).json({
-        success: false,
-        message: 'Phone number already registered'
-      });
-    }
+    if (existingUser)
+      return res.status(400).json({ success: false, message: 'Phone number already registered' })
 
-    // Hash the PIN
     const pin_hash = await bcrypt.hash(pin, 10);
-
-    // Create the user
     const result = await User.create({
-      full_name,
+      full_name: full_name.trim(),
       phone,
       pin_hash,
       role: role || 'farmer',
       district
     });
 
-    res.status(201).json({
-      success: true,
-      message: 'Account created successfully!',
-      user_id: result.insertId
-    });
+    res.status(201).json({ success: true, message: 'Account created successfully!', user_id: result.insertId });
 
   } catch (error) {
-    console.error('Register error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Server error. Please try again.'
-    });
+    console.error('Register error:', error.message);
+    res.status(500).json({ success: false, message: 'Server error. Please try again.' });
   }
 };
 
@@ -57,38 +66,25 @@ const login = async (req, res) => {
   try {
     const { phone, pin } = req.body;
 
-    // Check fields
-    if (!phone || !pin) {
-      return res.status(400).json({
-        success: false,
-        message: 'Phone and PIN are required'
-      });
-    }
+    if (!phone || !pin)
+      return res.status(400).json({ success: false, message: 'Phone and PIN are required' })
 
-    // Find user
+    if (!validatePhone(phone))
+      return res.status(400).json({ success: false, message: 'Invalid phone number format' })
+
+    if (!validatePin(pin))
+      return res.status(400).json({ success: false, message: 'PIN must be exactly 4 digits' })
+
     const user = await User.findByPhone(phone);
-    if (!user) {
-      return res.status(401).json({
-        success: false,
-        message: 'Phone number not registered'
-      });
-    }
+    if (!user)
+      return res.status(401).json({ success: false, message: 'Phone number not registered' })
 
-    // Check PIN
     const pinMatch = await bcrypt.compare(pin, user.pin_hash);
-    if (!pinMatch) {
-      return res.status(401).json({
-        success: false,
-        message: 'Incorrect PIN'
-      });
-    }
+    if (!pinMatch)
+      return res.status(401).json({ success: false, message: 'Incorrect PIN' })
 
-    // Generate JWT token
     const token = jwt.sign(
-      {
-        user_id: user.user_id,
-        role: user.role
-      },
+      { user_id: user.user_id, role: user.role },
       process.env.JWT_SECRET,
       { expiresIn: '7d' }
     );
@@ -107,11 +103,8 @@ const login = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Login error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Server error. Please try again.'
-    });
+    console.error('Login error:', error.message);
+    res.status(500).json({ success: false, message: 'Server error. Please try again.' });
   }
 };
 

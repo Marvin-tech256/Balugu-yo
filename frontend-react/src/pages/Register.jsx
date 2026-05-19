@@ -139,13 +139,13 @@ export default function Register() {
                 <p style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 20 }}>Tell us about yourself</p>
                 <div style={{ marginBottom: 14 }}>
                   <label className="form-label">Full Name</label>
-                  <input className="form-input" value={form.full_name} onChange={e => set('full_name', e.target.value)} placeholder="e.g. Nakato Sarah" />
+                  <input className="form-input" value={form.full_name} onChange={e => set('full_name', e.target.value.replace(/[^a-zA-Z\s'\-]/g, '').slice(0, 100))} placeholder="e.g. Nakato Sarah" />
                 </div>
                 <div style={{ marginBottom: 14 }}>
                   <label className="form-label">Phone Number</label>
                   <div style={{ display: 'flex', border: '1.5px solid var(--border)', borderRadius: 'var(--radius-sm)', overflow: 'hidden' }}>
                     <span style={{ padding: '10px 12px', color: 'var(--text-muted)', fontSize: 13, borderRight: '1px solid var(--border)', background: 'var(--surface-2)', whiteSpace: 'nowrap' }}>🇺🇬 +256</span>
-                    <input type="tel" value={form.phone} onChange={e => set('phone', e.target.value)} placeholder="700 000 000" maxLength={9}
+                    <input type="tel" value={form.phone} onChange={e => set('phone', e.target.value.replace(/[^0-9]/g, '').slice(0, 9))} placeholder="700 000 000" maxLength={9}
                       style={{ border: 'none', outline: 'none', padding: '10px 12px', fontSize: 14, flex: 1, background: 'white', color: 'var(--text)' }} />
                   </div>
                 </div>

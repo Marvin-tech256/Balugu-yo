@@ -13,6 +13,8 @@ export default function Dashboard() {
   const [recentAlerts, setRecentAlerts] = useState([])
   const [prediction, setPrediction] = useState(null)
   const [notifCount, setNotifCount] = useState(0)
+  const [selectedFarmId, setSelectedFarmId] = useState(null)
+  const [allPredictions, setAllPredictions] = useState([])
 
   const hour = new Date().getHours()
   const greet = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening'
@@ -29,7 +31,10 @@ export default function Dashboard() {
       if (predData.success) {
         setStats(s => ({ ...s, plantings: predData.count }))
         const preds = predData.predictions || []
-        setPrediction(preds.filter(p => p.days_remaining > 0).sort((a, b) => a.days_remaining - b.days_remaining)[0] || preds[0] || null)
+        setAllPredictions(preds)
+        const first = preds.filter(p => p.days_remaining > 0).sort((a, b) => a.days_remaining - b.days_remaining)[0] || preds[0] || null
+        setPrediction(first)
+        if (first) setSelectedFarmId(first.farm_name)
       }
       if (alertData.success) {
         setStats(s => ({ ...s, alerts: alertData.count }))
@@ -37,6 +42,12 @@ export default function Dashboard() {
         setRecentAlerts((alertData.notifications || []).slice(0, 3))
       }
     } catch (err) { console.error(err) }
+  }
+
+  function selectFarm(farm) {
+    setSelectedFarmId(farm.farm_name)
+    const pred = allPredictions.find(p => p.farm_name === farm.farm_name) || null
+    setPrediction(pred)
   }
 
   const alertDot = { harvest: 'var(--primary)', weather: 'var(--teal)', warning: 'var(--gold)', system: 'var(--text-muted)' }
@@ -140,9 +151,9 @@ export default function Dashboard() {
               {farms.length === 0 ? (
                 <div style={{ padding: '20px 16px', textAlign: 'center', color: 'var(--text-muted)', fontSize: 13 }}>No farms yet</div>
               ) : farms.slice(0, 3).map(f => (
-                <div key={f.farm_id} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '9px 16px', borderBottom: '1px solid var(--border)', cursor: 'pointer' }}
-                  onMouseEnter={e => e.currentTarget.style.background = 'var(--surface-2)'}
-                  onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
+                <div key={f.farm_id} onClick={() => selectFarm(f)} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '9px 16px', borderBottom: '1px solid var(--border)', cursor: 'pointer', background: selectedFarmId === f.farm_name ? 'var(--primary-bg)' : 'transparent', borderLeft: selectedFarmId === f.farm_name ? '3px solid var(--primary)' : '3px solid transparent', transition: 'all 0.15s' }}
+                  onMouseEnter={e => { if (selectedFarmId !== f.farm_name) e.currentTarget.style.background = 'var(--surface-2)' }}
+                  onMouseLeave={e => { if (selectedFarmId !== f.farm_name) e.currentTarget.style.background = 'transparent' }}>
                   <div style={{ width: 32, height: 32, borderRadius: 8, background: 'var(--primary-bg)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                     <Wheat size={15} color="var(--primary)" />
                   </div>

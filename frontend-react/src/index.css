@@ -51,11 +51,30 @@
 body {
     font-family: 'Inter', sans-serif;
     background: var(--bg);
+    background-image: url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=1920&q=85');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
     color: var(--text);
     min-height: 100vh;
     font-size: 14px;
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: rgba(240, 253, 244, 0.82);
+    backdrop-filter: brightness(1.05);
+    z-index: 0;
+    pointer-events: none;
+}
+
+#root {
+    position: relative;
+    z-index: 1;
 }
 
 h1,
@@ -373,10 +392,12 @@ textarea {
 }
 
 .card {
-    background: var(--surface);
+    background: rgba(255, 255, 255, 0.82);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border-radius: var(--radius);
     box-shadow: var(--shadow-sm);
-    border: 1px solid var(--border);
+    border: 1px solid rgba(255,255,255,0.7);
 }
 
 .chip-option {
@@ -409,10 +430,12 @@ textarea {
 }
 
 .stat-card {
-    background: var(--surface);
+    background: rgba(255, 255, 255, 0.82);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border-radius: var(--radius);
     padding: 14px 16px;
-    border: 1px solid var(--border);
+    border: 1px solid rgba(255,255,255,0.7);
     box-shadow: var(--shadow-sm);
 }
 

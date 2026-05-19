@@ -19,7 +19,8 @@ const Farm = {
     const [rows] = await db.execute(
       `SELECT f.*, 
         p.planting_id, p.planting_date, p.yam_variety, p.status,
-        pr.predicted_harvest_date, pr.days_remaining, pr.confidence_percent
+        pr.predicted_harvest_date, pr.confidence_percent,
+        CEIL(DATEDIFF(pr.predicted_harvest_date, CURDATE())) AS days_remaining
        FROM farms f
        LEFT JOIN plantings p ON f.farm_id = p.farm_id
        LEFT JOIN predictions pr ON p.planting_id = pr.planting_id

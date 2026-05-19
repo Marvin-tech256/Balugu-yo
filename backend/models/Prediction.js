@@ -28,7 +28,9 @@ const Prediction = {
   // Get all predictions for a user
   getByUserId: async (user_id) => {
     const [rows] = await db.execute(
-      `SELECT pr.*, p.planting_date, p.yam_variety, p.status,
+      `SELECT pr.*,
+              CEIL(DATEDIFF(pr.predicted_harvest_date, CURDATE())) AS days_remaining,
+              p.planting_date, p.yam_variety, p.status,
               f.farm_name, f.district
        FROM predictions pr
        JOIN plantings p ON pr.planting_id = p.planting_id

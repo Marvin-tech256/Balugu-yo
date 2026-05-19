@@ -57,12 +57,24 @@ export default function AddPlanting() {
 
     return (
         <Layout>
-            <div style={{ padding: '24px 32px', maxWidth: 960, margin: '0 auto' }}>
+            {/* Background */}
+            <div style={{ position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none' }}>
+                <div style={{
+                    position: 'absolute', inset: 0,
+                    backgroundImage: 'url(https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=1600&q=80)',
+                    backgroundSize: 'cover', backgroundPosition: 'center',
+                    filter: 'brightness(0.18) saturate(1.3)',
+                }} />
+                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(160deg, rgba(2,13,7,0.7) 0%, rgba(5,46,22,0.6) 50%, rgba(6,95,70,0.5) 100%)' }} />
+                <div style={{ position: 'absolute', top: '10%', left: '5%', width: 300, height: 300, borderRadius: '50%', background: 'radial-gradient(circle, rgba(22,163,74,0.08) 0%, transparent 70%)', animation: 'floatSlow 9s ease-in-out infinite', pointerEvents: 'none' }} />
+                <div style={{ position: 'absolute', bottom: '15%', right: '5%', width: 240, height: 240, borderRadius: '50%', background: 'radial-gradient(circle, rgba(13,148,136,0.07) 0%, transparent 70%)', animation: 'floatSlow 7s ease-in-out infinite reverse', pointerEvents: 'none' }} />
+            </div>
+            <div style={{ padding: '24px 32px', maxWidth: 960, margin: '0 auto', position: 'relative', zIndex: 1 }}>
 
                 {/* Header */}
                 <div style={{ marginBottom: 28 }}>
-                    <h1 style={{ fontSize: 20, fontWeight: 600, color: 'var(--text)' }}>Add New Planting</h1>
-                    <p style={{ fontSize: 13, color: 'var(--text-muted)', marginTop: 4 }}>Record your yam planting and get an AI-powered harvest prediction</p>
+                    <h1 style={{ fontSize: 20, fontWeight: 600, color: 'white' }}>Add New Planting</h1>
+                    <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.55)', marginTop: 4 }}>Record your yam planting and get an AI-powered harvest prediction</p>
                 </div>
 
                 {!prediction ? (
@@ -72,12 +84,12 @@ export default function AddPlanting() {
                         <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
 
                             {/* Farm selection */}
-                            <div className="card" style={{ padding: '20px 22px' }}>
+                            <div style={{ background: 'rgba(255,255,255,0.07)', backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 16, padding: '20px 22px' }}>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
-                                    <div style={{ width: 32, height: 32, borderRadius: 8, background: 'var(--primary-bg)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                        <Wheat size={16} color="var(--primary)" />
+                                    <div style={{ width: 32, height: 32, borderRadius: 8, background: 'rgba(22,163,74,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                        <Wheat size={16} color="#6ee7b7" />
                                     </div>
-                                    <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--text)' }}>Select Farm</span>
+                                    <span style={{ fontSize: 14, fontWeight: 600, color: 'white' }}>Select Farm</span>
                                 </div>
                                 {farms.length === 0 ? (
                                     <div style={{ textAlign: 'center', padding: '16px 0', color: 'var(--text-muted)', fontSize: 13 }}>
@@ -89,16 +101,16 @@ export default function AddPlanting() {
                                         {farms.map(f => (
                                             <div key={f.farm_id} onClick={() => setFarmId(String(f.farm_id))} style={{
                                                 display: 'flex', alignItems: 'center', gap: 12, padding: '10px 14px',
-                                                borderRadius: 10, border: `1.5px solid ${String(farmId) === String(f.farm_id) ? 'var(--primary)' : 'var(--border)'}`,
-                                                background: String(farmId) === String(f.farm_id) ? 'var(--primary-bg)' : 'var(--surface)',
+                                                borderRadius: 10, border: `1.5px solid ${String(farmId) === String(f.farm_id) ? '#6ee7b7' : 'rgba(255,255,255,0.12)'}`,
+                                                background: String(farmId) === String(f.farm_id) ? 'rgba(22,163,74,0.15)' : 'rgba(255,255,255,0.04)',
                                                 cursor: 'pointer', transition: 'all 0.15s',
                                             }}>
-                                                <div style={{ width: 8, height: 8, borderRadius: '50%', background: String(farmId) === String(f.farm_id) ? 'var(--primary)' : 'var(--border)', flexShrink: 0 }} />
+                                                <div style={{ width: 8, height: 8, borderRadius: '50%', background: String(farmId) === String(f.farm_id) ? '#6ee7b7' : 'rgba(255,255,255,0.3)', flexShrink: 0 }} />
                                                 <div style={{ flex: 1, minWidth: 0 }}>
-                                                    <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text)' }}>{f.farm_name}</div>
-                                                    <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>{f.district} · {f.soil_type} soil</div>
+                                                    <div style={{ fontSize: 13, fontWeight: 600, color: 'white' }}>{f.farm_name}</div>
+                                                    <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)' }}>{f.district} · {f.soil_type} soil</div>
                                                 </div>
-                                                {String(farmId) === String(f.farm_id) && <CheckCircle size={16} color="var(--primary)" />}
+                                                {String(farmId) === String(f.farm_id) && <CheckCircle size={16} color="#6ee7b7" />}
                                             </div>
                                         ))}
                                     </div>
@@ -106,20 +118,20 @@ export default function AddPlanting() {
                             </div>
 
                             {/* Yam variety */}
-                            <div className="card" style={{ padding: '20px 22px' }}>
+                            <div style={{ background: 'rgba(255,255,255,0.07)', backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 16, padding: '20px 22px' }}>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
-                                    <div style={{ width: 32, height: 32, borderRadius: 8, background: 'var(--teal-light)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                        <Sprout size={16} color="var(--teal)" />
+                                    <div style={{ width: 32, height: 32, borderRadius: 8, background: 'rgba(13,148,136,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                        <Sprout size={16} color="#5eead4" />
                                     </div>
-                                    <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--text)' }}>Yam Variety</span>
+                                    <span style={{ fontSize: 14, fontWeight: 600, color: 'white' }}>Yam Variety</span>
                                 </div>
                                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
                                     {VARIETIES.map(v => (
                                         <button key={v} onClick={() => setVariety(v)} style={{
                                             padding: '8px 14px', borderRadius: 20, fontSize: 13, fontWeight: 500, cursor: 'pointer', transition: 'all 0.15s',
-                                            border: `1.5px solid ${variety === v ? 'var(--teal)' : 'var(--border)'}`,
-                                            background: variety === v ? 'var(--teal-light)' : 'var(--surface)',
-                                            color: variety === v ? 'var(--teal)' : 'var(--text-muted)',
+                                            border: `1.5px solid ${variety === v ? '#5eead4' : 'rgba(255,255,255,0.15)'}`,
+                                            background: variety === v ? 'rgba(13,148,136,0.2)' : 'rgba(255,255,255,0.05)',
+                                            color: variety === v ? '#5eead4' : 'rgba(255,255,255,0.6)',
                                         }}>{v}</button>
                                     ))}
                                 </div>
@@ -130,50 +142,50 @@ export default function AddPlanting() {
                         <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
 
                             {/* Date + mounds */}
-                            <div className="card" style={{ padding: '20px 22px' }}>
+                            <div style={{ background: 'rgba(255,255,255,0.07)', backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 16, padding: '20px 22px' }}>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
-                                    <div style={{ width: 32, height: 32, borderRadius: 8, background: 'var(--gold-light)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                        <CalendarDays size={16} color="var(--gold)" />
+                                    <div style={{ width: 32, height: 32, borderRadius: 8, background: 'rgba(217,119,6,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                        <CalendarDays size={16} color="#fbbf24" />
                                     </div>
-                                    <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--text)' }}>Planting Details</span>
+                                    <span style={{ fontSize: 14, fontWeight: 600, color: 'white' }}>Planting Details</span>
                                 </div>
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
                                     <div>
-                                        <label className="form-label">Planting Date</label>
-                                        <input type="date" value={date} onChange={e => setDate(e.target.value)} className="form-input" />
+                                        <label style={{ display: 'block', fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase', letterSpacing: 0.6, marginBottom: 5 }}>Planting Date</label>
+                                        <input type="date" value={date} onChange={e => setDate(e.target.value)} style={{ width: '100%', padding: '10px 14px', border: '1.5px solid rgba(255,255,255,0.15)', borderRadius: 8, fontSize: 14, outline: 'none', background: 'rgba(255,255,255,0.08)', color: 'white', colorScheme: 'dark' }} />
                                     </div>
                                     <div>
-                                        <label className="form-label">Number of Mounds</label>
-                                        <input type="number" value={mounds} onChange={e => setMounds(e.target.value)} placeholder="e.g. 50" min="1" className="form-input" />
+                                        <label style={{ display: 'block', fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase', letterSpacing: 0.6, marginBottom: 5 }}>Number of Mounds</label>
+                                        <input type="number" value={mounds} onChange={e => setMounds(e.target.value)} placeholder="e.g. 50" min="1" style={{ width: '100%', padding: '10px 14px', border: '1.5px solid rgba(255,255,255,0.15)', borderRadius: 8, fontSize: 14, outline: 'none', background: 'rgba(255,255,255,0.08)', color: 'white' }} />
                                     </div>
                                 </div>
                             </div>
 
                             {/* Soil type */}
-                            <div className="card" style={{ padding: '20px 22px' }}>
-                                <label className="form-label" style={{ marginBottom: 12, display: 'block' }}>Soil Type</label>
+                            <div style={{ background: 'rgba(255,255,255,0.07)', backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 16, padding: '20px 22px' }}>
+                                <label style={{ display: 'block', fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase', letterSpacing: 0.6, marginBottom: 12 }}>Soil Type</label>
                                 <div style={{ display: 'flex', gap: 10 }}>
                                     {SOILS.map(s => (
                                         <button key={s.val} onClick={() => setSoil(s.val)} style={{
                                             flex: 1, padding: '10px 0', borderRadius: 10, fontSize: 13, fontWeight: 600, cursor: 'pointer', transition: 'all 0.15s',
-                                            border: `1.5px solid ${soil === s.val ? 'var(--primary)' : 'var(--border)'}`,
-                                            background: soil === s.val ? 'var(--primary-bg)' : 'var(--surface)',
-                                            color: soil === s.val ? 'var(--primary)' : 'var(--text-muted)',
+                                            border: `1.5px solid ${soil === s.val ? '#6ee7b7' : 'rgba(255,255,255,0.15)'}`,
+                                            background: soil === s.val ? 'rgba(22,163,74,0.2)' : 'rgba(255,255,255,0.05)',
+                                            color: soil === s.val ? '#6ee7b7' : 'rgba(255,255,255,0.6)',
                                         }}>{s.label}</button>
                                     ))}
                                 </div>
                             </div>
 
                             {/* Notes */}
-                            <div className="card" style={{ padding: '20px 22px' }}>
+                            <div style={{ background: 'rgba(255,255,255,0.07)', backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 16, padding: '20px 22px' }}>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
-                                    <div style={{ width: 32, height: 32, borderRadius: 8, background: 'var(--surface-2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                        <FileText size={16} color="var(--text-muted)" />
+                                    <div style={{ width: 32, height: 32, borderRadius: 8, background: 'rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                        <FileText size={16} color="rgba(255,255,255,0.5)" />
                                     </div>
-                                    <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--text)' }}>Notes <span style={{ fontSize: 12, color: 'var(--text-muted)', fontWeight: 400 }}>(optional)</span></span>
+                                    <span style={{ fontSize: 14, fontWeight: 600, color: 'white' }}>Notes <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)', fontWeight: 400 }}>(optional)</span></span>
                                 </div>
                                 <textarea value={notes} onChange={e => setNotes(e.target.value)} placeholder="Any additional information about this planting..." rows={3}
-                                    className="form-input" style={{ resize: 'vertical', minHeight: 80 }} />
+                                    style={{ width: '100%', padding: '10px 14px', border: '1.5px solid rgba(255,255,255,0.15)', borderRadius: 8, fontSize: 14, outline: 'none', background: 'rgba(255,255,255,0.08)', color: 'white', resize: 'vertical', minHeight: 80 }} />
                             </div>
 
                             {/* Submit */}

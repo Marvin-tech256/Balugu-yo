@@ -19,6 +19,7 @@ export default function Register() {
   const [loading, setLoading] = useState(false)
   const [phoneError, setPhoneError] = useState('')
   const [checkingPhone, setCheckingPhone] = useState(false)
+  const [nameError, setNameError] = useState('')
   const pinRefs = [useRef(), useRef(), useRef(), useRef()]
   const cPinRefs = [useRef(), useRef(), useRef(), useRef()]
   const showToast = useToast()
@@ -50,6 +51,7 @@ export default function Register() {
 
   const goStep2 = () => {
     if (!form.full_name.trim()) { showToast('Enter your full name', 'error'); return }
+    if (nameError) { showToast(nameError, 'error'); return }
     if (!form.phone || form.phone.length < 9) { showToast('Enter a valid phone number', 'error'); return }
     if (phoneError) { showToast(phoneError, 'error'); return }
     setStep(2)
@@ -156,7 +158,17 @@ export default function Register() {
                 <p style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 20 }}>Tell us about yourself</p>
                 <div style={{ marginBottom: 14 }}>
                   <label className="form-label">Full Name</label>
-                  <input className="form-input" value={form.full_name} onChange={e => set('full_name', e.target.value.replace(/[^a-zA-Z\s'\-]/g, '').replace(/[-']{2,}/g, '').slice(0, 100))} placeholder="e.g. Nakato Sarah" />
+                  <input className="form-input" value={form.full_name}
+                    onChange={e => {
+                      const val = e.target.value.replace(/[^a-zA-Z\s'\-]/g, '').replace(/[-']{2,}/g, '').slice(0, 100)
+                      set('full_name', val)
+                      if (val.trim().length > 0 && val.trim().length < 2) setNameError('Name must be at least 2 characters')
+                      else if (/^[\s'\-]/.test(val)) setNameError('Name must start with a letter')
+                      else setNameError('')
+                    }}
+                    placeholder="e.g. Nakato Sarah"
+                    style={{ borderColor: nameError ? 'var(--danger)' : undefined }} />
+                  {nameError && <div style={{ fontSize: 12, color: 'var(--danger)', marginTop: 5, display: 'flex', alignItems: 'center', gap: 4 }}>⚠ {nameError}</div>}
                 </div>
                 <div style={{ marginBottom: 14 }}>
                   <label className="form-label">Phone Number</label>

@@ -17,12 +17,28 @@ export default function Register() {
   const [pin, setPin] = useState(['', '', '', ''])
   const [confirmPin, setConfirmPin] = useState(['', '', '', ''])
   const [loading, setLoading] = useState(false)
+  const [phoneError, setPhoneError] = useState('')
+  const [checkingPhone, setCheckingPhone] = useState(false)
   const pinRefs = [useRef(), useRef(), useRef(), useRef()]
   const cPinRefs = [useRef(), useRef(), useRef(), useRef()]
   const showToast = useToast()
   const navigate = useNavigate()
 
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }))
+
+  const handlePhoneChange = async (val) => {
+    const cleaned = val.replace(/[^0-9]/g, '').slice(0, 9)
+    set('phone', cleaned)
+    setPhoneError('')
+    if (cleaned.length === 9) {
+      setCheckingPhone(true)
+      try {
+        const data = await api.post('/auth/check-phone', { phone: '+256' + cleaned })
+        if (data.exists) setPhoneError('This number is already registered')
+      } catch { }
+      setCheckingPhone(false)
+    }
+  }
 
   const handlePinChange = (arr, setArr, refs, i, val) => {
     const next = [...arr]; next[i] = val; setArr(next)
@@ -35,6 +51,7 @@ export default function Register() {
   const goStep2 = () => {
     if (!form.full_name.trim()) { showToast('Enter your full name', 'error'); return }
     if (!form.phone || form.phone.length < 9) { showToast('Enter a valid phone number', 'error'); return }
+    if (phoneError) { showToast(phoneError, 'error'); return }
     setStep(2)
   }
   const goStep3 = () => {
@@ -143,11 +160,13 @@ export default function Register() {
                 </div>
                 <div style={{ marginBottom: 14 }}>
                   <label className="form-label">Phone Number</label>
-                  <div style={{ display: 'flex', border: '1.5px solid var(--border)', borderRadius: 'var(--radius-sm)', overflow: 'hidden' }}>
+                  <div style={{ display: 'flex', border: `1.5px solid ${phoneError ? 'var(--danger)' : 'var(--border)'}`, borderRadius: 'var(--radius-sm)', overflow: 'hidden' }}>
                     <span style={{ padding: '10px 12px', color: 'var(--text-muted)', fontSize: 13, borderRight: '1px solid var(--border)', background: 'var(--surface-2)', whiteSpace: 'nowrap' }}>🇺🇬 +256</span>
-                    <input type="tel" value={form.phone} onChange={e => set('phone', e.target.value.replace(/[^0-9]/g, '').slice(0, 9))} placeholder="700 000 000" maxLength={9}
+                    <input type="tel" value={form.phone} onChange={e => handlePhoneChange(e.target.value)} placeholder="700 000 000" maxLength={9}
                       style={{ border: 'none', outline: 'none', padding: '10px 12px', fontSize: 14, flex: 1, background: 'white', color: 'var(--text)' }} />
+                    {checkingPhone && <span style={{ padding: '10px 12px', fontSize: 12, color: 'var(--text-muted)' }}>checking...</span>}
                   </div>
+                  {phoneError && <div style={{ fontSize: 12, color: 'var(--danger)', marginTop: 5, display: 'flex', alignItems: 'center', gap: 4 }}>⚠ {phoneError}</div>}
                 </div>
                 <div style={{ marginBottom: 20 }}>
                   <label className="form-label">I am a</label>

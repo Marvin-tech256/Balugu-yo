@@ -139,7 +139,7 @@ export default function Register() {
                 <p style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 20 }}>Tell us about yourself</p>
                 <div style={{ marginBottom: 14 }}>
                   <label className="form-label">Full Name</label>
-                  <input className="form-input" value={form.full_name} onChange={e => set('full_name', e.target.value.replace(/[^a-zA-Z\s'\-]/g, '').slice(0, 100))} placeholder="e.g. Nakato Sarah" />
+                  <input className="form-input" value={form.full_name} onChange={e => set('full_name', e.target.value.replace(/[^a-zA-Z\s'\-]/g, '').replace(/[-']{2,}/g, '').slice(0, 100))} placeholder="e.g. Nakato Sarah" />
                 </div>
                 <div style={{ marginBottom: 14 }}>
                   <label className="form-label">Phone Number</label>

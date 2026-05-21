@@ -14,7 +14,7 @@ function validatePin(pin) {
   return /^\d{4}$/.test(pin)
 }
 function validateName(name) {
-  return /^[a-zA-Z\s'\-]{2,100}$/.test(name.trim())
+  return /^[a-zA-Z]+([\s'\-][a-zA-Z]+)*$/.test(name.trim())
 }
 
 // REGISTER

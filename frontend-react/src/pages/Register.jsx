@@ -163,14 +163,17 @@ export default function Register() {
                       const raw = e.target.value
                       if (/[^a-zA-Z\s'\-]/.test(raw)) {
                         setNameError('Only letters, spaces, hyphens and apostrophes allowed')
+                        set('full_name', raw.slice(0, -1))
                         return
                       }
                       if (/[-']{2,}/.test(raw)) {
-                        setNameError('Cannot use consecutive special characters like --')
+                        setNameError('Cannot use -- or consecutive special characters')
+                        set('full_name', raw.slice(0, -1))
                         return
                       }
-                      if (/^[\s'\-]/.test(raw)) {
+                      if (raw.length > 0 && /^[\s'\-]/.test(raw)) {
                         setNameError('Name must start with a letter')
+                        set('full_name', '')
                         return
                       }
                       set('full_name', raw.slice(0, 100))

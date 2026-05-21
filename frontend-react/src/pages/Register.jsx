@@ -160,11 +160,21 @@ export default function Register() {
                   <label className="form-label">Full Name</label>
                   <input className="form-input" value={form.full_name}
                     onChange={e => {
-                      const val = e.target.value.replace(/[^a-zA-Z\s'\-]/g, '').replace(/[-']{2,}/g, '').slice(0, 100)
-                      set('full_name', val)
-                      if (val.trim().length > 0 && val.trim().length < 2) setNameError('Name must be at least 2 characters')
-                      else if (/^[\s'\-]/.test(val)) setNameError('Name must start with a letter')
-                      else setNameError('')
+                      const raw = e.target.value
+                      if (/[^a-zA-Z\s'\-]/.test(raw)) {
+                        setNameError('Only letters, spaces, hyphens and apostrophes allowed')
+                        return
+                      }
+                      if (/[-']{2,}/.test(raw)) {
+                        setNameError('Cannot use consecutive special characters like --')
+                        return
+                      }
+                      if (/^[\s'\-]/.test(raw)) {
+                        setNameError('Name must start with a letter')
+                        return
+                      }
+                      set('full_name', raw.slice(0, 100))
+                      setNameError(raw.trim().length > 0 && raw.trim().length < 2 ? 'Name must be at least 2 characters' : '')
                     }}
                     placeholder="e.g. Nakato Sarah"
                     style={{ borderColor: nameError ? 'var(--danger)' : undefined }} />

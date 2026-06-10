@@ -20,10 +20,8 @@ const protect = (req, res, next) => {
     next();
 
   } catch (error) {
-    return res.status(401).json({ 
-      success: false,
-      message: 'Invalid or expired token' 
-    });
+    const message = error.name === 'TokenExpiredError' ? 'Session expired. Please log in again.' : 'Invalid or expired token'
+    return res.status(401).json({ success: false, message });
   }
 };
 

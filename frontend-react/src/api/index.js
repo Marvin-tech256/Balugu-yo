@@ -18,7 +18,16 @@ api.interceptors.response.use(
         }
         return res.data
     },
-    (err) => Promise.reject(err.response?.data || err)
+    (err) => {
+        const status = err.response?.status
+        const message = err.response?.data?.message || ''
+        if (status === 401 && (message.includes('expired') || message.includes('invalid'))) {
+            localStorage.removeItem('balugu_token')
+            localStorage.removeItem('balugu_user')
+            window.location.href = '/login'
+        }
+        return Promise.reject(err.response?.data || err)
+    }
 )
 
 export default api

@@ -17,7 +17,11 @@ import ExtDashboard from './pages/ExtDashboard'
 function PrivateRoute({ children, roles }) {
     const { user } = useAuth()
     if (!user) return <Navigate to="/login" replace />
-    if (roles && !roles.includes(user.role)) return <Navigate to="/dashboard" replace />
+    if (roles && !roles.includes(user.role)) {
+        if (user.role === 'admin') return <Navigate to="/admin" replace />
+        if (user.role === 'extension_officer') return <Navigate to="/ext-dashboard" replace />
+        return <Navigate to="/dashboard" replace />
+    }
     return children
 }
 
@@ -46,7 +50,7 @@ export default function App() {
                         <Route path="/weather" element={<PrivateRoute><Weather /></PrivateRoute>} />
                         <Route path="/alerts" element={<PrivateRoute><Alerts /></PrivateRoute>} />
                         <Route path="/admin" element={<PrivateRoute roles={['admin']}><Admin /></PrivateRoute>} />
-                        <Route path="/ext-dashboard" element={<PrivateRoute roles={['extension_officer']}><ExtDashboard /></PrivateRoute>} />
+                        <Route path="/ext-dashboard" element={<PrivateRoute roles={['extension_officer', 'admin']}><ExtDashboard /></PrivateRoute>} />
                         <Route path="*" element={<Navigate to="/" replace />} />
                     </Routes>
                 </BrowserRouter>

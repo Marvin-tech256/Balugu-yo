@@ -4,10 +4,22 @@ import { Home, Wheat, Sprout, CloudRain, Bell, LogOut, ChevronLeft, ChevronRight
 import { useAuth } from '../context/AuthContext'
 import { useToast } from './Toast'
 
-const links = [
+const farmerLinks = [
     { to: '/dashboard', icon: Home, label: 'Dashboard' },
     { to: '/my-farms', icon: Wheat, label: 'My Farms' },
     { to: '/add-planting', icon: Sprout, label: 'Add Planting' },
+    { to: '/weather', icon: CloudRain, label: 'Weather' },
+    { to: '/alerts', icon: Bell, label: 'Alerts' },
+]
+
+const adminLinks = [
+    { to: '/admin', icon: Home, label: 'Dashboard' },
+    { to: '/weather', icon: CloudRain, label: 'Weather' },
+    { to: '/alerts', icon: Bell, label: 'Alerts' },
+]
+
+const officerLinks = [
+    { to: '/ext-dashboard', icon: Home, label: 'Dashboard' },
     { to: '/weather', icon: CloudRain, label: 'Weather' },
     { to: '/alerts', icon: Bell, label: 'Alerts' },
 ]
@@ -16,6 +28,8 @@ export default function Sidebar({ collapsed, onToggle }) {
     const { logout, user } = useAuth()
     const navigate = useNavigate()
     const showToast = useToast()
+
+    const links = user?.role === 'admin' ? adminLinks : user?.role === 'extension_officer' ? officerLinks : farmerLinks
 
     const handleLogout = () => {
         logout()

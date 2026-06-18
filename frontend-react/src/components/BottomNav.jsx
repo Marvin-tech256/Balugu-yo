@@ -1,8 +1,9 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
 import { Home, Wheat, Sprout, CloudRain, Bell } from 'lucide-react'
+import { useAuth } from '../context/AuthContext'
 
-const links = [
+const farmerLinks = [
     { to: '/dashboard', icon: Home, label: 'Home' },
     { to: '/my-farms', icon: Wheat, label: 'Farms' },
     { to: '/add-planting', icon: Sprout, label: 'Plant' },
@@ -10,7 +11,21 @@ const links = [
     { to: '/alerts', icon: Bell, label: 'Alerts' },
 ]
 
+const adminLinks = [
+    { to: '/admin', icon: Home, label: 'Home' },
+    { to: '/weather', icon: CloudRain, label: 'Weather' },
+    { to: '/alerts', icon: Bell, label: 'Alerts' },
+]
+
+const officerLinks = [
+    { to: '/ext-dashboard', icon: Home, label: 'Home' },
+    { to: '/weather', icon: CloudRain, label: 'Weather' },
+    { to: '/alerts', icon: Bell, label: 'Alerts' },
+]
+
 export default function BottomNav() {
+    const { user } = useAuth()
+    const links = user?.role === 'admin' ? adminLinks : user?.role === 'extension_officer' ? officerLinks : farmerLinks
     return (
         <nav style={{
             position: 'fixed', bottom: 0, left: 0, right: 0,

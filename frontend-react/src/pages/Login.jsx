@@ -113,6 +113,7 @@ export default function Login() {
                             </div>
                             <input type="tel" value={phone} onChange={e => setPhone(e.target.value.replace(/[^0-9]/g, '').slice(0, 9))} placeholder="700 000 000" maxLength={9}
                                 onKeyDown={e => e.key === 'Enter' && pinRefs[0].current?.focus()}
+                                inputMode="numeric" pattern="[0-9]*" autoComplete="tel"
                                 style={{ border: 'none', outline: 'none', padding: '10px 12px', fontSize: 14, flex: 1, background: 'white', color: 'var(--text)' }} />
                         </div>
                     </div>
@@ -125,6 +126,7 @@ export default function Login() {
                                 <input key={i} ref={pinRefs[i]} type="password" maxLength={1} value={v}
                                     onChange={e => handlePinChange(i, e.target.value)}
                                     onKeyDown={e => handlePinKey(i, e)}
+                                    inputMode="numeric" pattern="[0-9]*"
                                     style={{ width: 56, height: 56, border: '1.5px solid var(--border)', borderRadius: 10, textAlign: 'center', fontSize: 22, fontWeight: 700, color: 'var(--primary)', outline: 'none', background: 'var(--surface)', transition: 'border-color 0.15s, box-shadow 0.15s' }}
                                     onFocus={e => { e.target.style.borderColor = 'var(--primary)'; e.target.style.boxShadow = '0 0 0 3px rgba(22,163,74,0.12)' }}
                                     onBlur={e => { e.target.style.borderColor = 'var(--border)'; e.target.style.boxShadow = 'none' }}

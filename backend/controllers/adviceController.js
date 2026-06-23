@@ -17,8 +17,8 @@ exports.askAdvice = async (req, res) => {
 
     res.json({ success: true, advice_id, message: 'Question submitted to extension officer' });
   } catch (error) {
-    console.error('[askAdvice]', error);
-    res.json({ success: false, message: 'Failed to submit question' });
+    console.error('[askAdvice] Error:', error.message, error.stack);
+    res.json({ success: false, message: 'Failed to submit question: ' + error.message });
   }
 };
 

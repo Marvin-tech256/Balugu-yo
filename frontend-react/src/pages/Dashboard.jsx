@@ -71,10 +71,12 @@ export default function Dashboard() {
         setAdviceForm({ farm_id: '', question: '' })
         setShowAdviceModal(false)
       } else {
-        showToast(res.message || 'Failed to submit', 'error')
+        console.error('Advice submission error:', res)
+        showToast(res.message || 'Failed to submit question', 'error')
       }
     } catch (e) {
-      showToast('Error submitting question', 'error')
+      console.error('Advice submission exception:', e)
+      showToast(e?.response?.data?.message || e?.message || 'Error submitting question', 'error')
     }
     setSubmittingAdvice(false)
   }

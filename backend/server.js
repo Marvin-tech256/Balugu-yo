@@ -62,6 +62,34 @@ app.use('/api/weather',     require('./routes/weather'));
 app.use('/api/alerts',      require('./routes/alerts'));
 app.use('/api/advice',      require('./routes/advice'));
 
+// Initialize database tables
+async function initializeTables() {
+  try {
+    const db = require('./config/db');
+    await db.execute(`
+      CREATE TABLE IF NOT EXISTS advice_requests (
+        advice_id INT AUTO_INCREMENT PRIMARY KEY,
+        farmer_id INT NOT NULL,
+        extension_officer_id INT,
+        farm_id INT,
+        question TEXT NOT NULL,
+        response TEXT,
+        status ENUM('pending', 'answered') DEFAULT 'pending',
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        answered_at TIMESTAMP,
+        FOREIGN KEY (farmer_id) REFERENCES users(user_id) ON DELETE CASCADE,
+        FOREIGN KEY (extension_officer_id) REFERENCES users(user_id) ON DELETE SET NULL,
+        FOREIGN KEY (farm_id) REFERENCES farms(farm_id) ON DELETE SET NULL
+      )
+    `);
+  } catch (error) {
+    console.error('[initializeTables] Error:', error.message);
+  }
+}
+
+// Call initialization
+initializeTables();
+
 // Export app for testing
 module.exports = app;
 

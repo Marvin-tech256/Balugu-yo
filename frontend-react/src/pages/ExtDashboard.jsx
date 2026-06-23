@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Search, Users, Wheat, Sprout, BarChart3, Phone, LogOut } from 'lucide-react'
+import { Search, Users, Wheat, Sprout, BarChart3, Phone, LogOut, MessageSquare, X } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import { useToast } from '../components/Toast'
 import api from '../api'
@@ -14,6 +14,11 @@ export default function ExtDashboard() {
     const [district, setDistrict] = useState('all')
     const [districts, setDistricts] = useState([])
     const [stats, setStats] = useState({ farmers: 0, farms: 0, soon: 0 })
+    const [adviceRequests, setAdviceRequests] = useState([])
+    const [selectedAdvice, setSelectedAdvice] = useState(null)
+    const [responseText, setResponseText] = useState('')
+    const [submittingResponse, setSubmittingResponse] = useState(false)
+    const [showAdviceTab, setShowAdviceTab] = useState(false)
 
     const handleLogout = () => { logout(); showToast('Logged out'); navigate('/login') }
 
@@ -32,6 +37,11 @@ export default function ExtDashboard() {
             setStats({ farmers: list.length, farms: d.farms.length, soon: list.filter(f => f.harvest_soon > 0).length })
             setDistricts([...new Set(list.map(f => f.district).filter(Boolean))])
         }).catch(() => { })
+        
+        // Load advice requests
+        api.get('/advice/requests').then(d => {
+            if (d.success) setAdviceRequests(d.requests || [])
+        }).catch(() => { })
     }, [])
 
     const filtered = farmers.filter(f => {
@@ -39,6 +49,33 @@ export default function ExtDashboard() {
         const matchQ = !query || f.full_name.toLowerCase().includes(query.toLowerCase()) || (f.district || '').toLowerCase().includes(query.toLowerCase())
         return matchD && matchQ
     })
+
+    async function handleRespondToAdvice() {
+        if (!responseText.trim()) {
+            showToast('Please enter your response', 'error')
+            return
+        }
+        setSubmittingResponse(true)
+        try {
+            const res = await api.post('/advice/respond', {
+                advice_id: selectedAdvice.advice_id,
+                response: responseText.trim(),
+            })
+            if (res.success) {
+                showToast('Response sent to farmer')
+                setAdviceRequests(adviceRequests.map(a => 
+                    a.advice_id === selectedAdvice.advice_id ? { ...a, status: 'answered', response: responseText } : a
+                ))
+                setSelectedAdvice(null)
+                setResponseText('')
+            } else {
+                showToast(res.message || 'Failed to send response', 'error')
+            }
+        } catch (e) {
+            showToast('Error sending response', 'error')
+        }
+        setSubmittingResponse(false)
+    }
 
     return (
         <div style={{ minHeight: '100vh', background: 'var(--bg)' }}>
@@ -72,40 +109,61 @@ export default function ExtDashboard() {
 
             <div style={{ background: 'var(--bg)', borderRadius: '20px 20px 0 0', marginTop: -24, padding: '24px 20px 80px' }}>
                 <div style={{ maxWidth: 700, margin: '0 auto' }}>
-                    {stats.soon > 0 && (
-                        <div style={{ background: '#FFF8E1', border: '1px solid var(--amber)', borderRadius: 'var(--radius)', padding: '14px 16px', display: 'flex', gap: 12, alignItems: 'center', marginBottom: 20 }}>
-                            <span style={{ fontSize: 24 }}>⚠️</span>
-                            <div style={{ fontSize: 13, lineHeight: 1.5 }}>
-                                <strong style={{ color: '#F57F17' }}>{stats.soon} farmer{stats.soon > 1 ? 's' : ''}</strong> have harvests due within 30 days. Consider scheduling field visits.
+                    {/* Tabs */}
+                    <div style={{ display: 'flex', gap: 8, marginBottom: 20 }}>
+                        <button onClick={() => setShowAdviceTab(false)} style={{
+                            padding: '10px 16px', borderRadius: 20, border: `1.5px solid ${!showAdviceTab ? 'var(--teal)' : 'var(--border)'}`,
+                            background: !showAdviceTab ? 'var(--teal-light)' : 'white', color: !showAdviceTab ? 'var(--teal)' : 'var(--text-muted)',
+                            fontSize: 13, fontWeight: !showAdviceTab ? 700 : 500, cursor: 'pointer'
+                        }}>
+                            👨‍🌾 Farmers
+                        </button>
+                        <button onClick={() => setShowAdviceTab(true)} style={{
+                            padding: '10px 16px', borderRadius: 20, border: `1.5px solid ${showAdviceTab ? 'var(--teal)' : 'var(--border)'}`,
+                            background: showAdviceTab ? 'var(--teal-light)' : 'white', color: showAdviceTab ? 'var(--teal)' : 'var(--text-muted)',
+                            fontSize: 13, fontWeight: showAdviceTab ? 700 : 500, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6
+                        }}>
+                            <MessageSquare size={14} /> Questions ({adviceRequests.filter(a => a.status === 'pending').length})
+                        </button>
+                    </div>
+
+                    {!showAdviceTab ? (
+                        <>
+                            {/* Farmers Tab */}
+                            {stats.soon > 0 && (
+                                <div style={{ background: '#FFF8E1', border: '1px solid var(--amber)', borderRadius: 'var(--radius)', padding: '14px 16px', display: 'flex', gap: 12, alignItems: 'center', marginBottom: 20 }}>
+                                    <span style={{ fontSize: 24 }}>⚠️</span>
+                                    <div style={{ fontSize: 13, lineHeight: 1.5 }}>
+                                        <strong style={{ color: '#F57F17' }}>{stats.soon} farmer{stats.soon > 1 ? 's' : ''}</strong> have harvests due within 30 days. Consider scheduling field visits.
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Search */}
+                            <div style={{ position: 'relative', marginBottom: 16 }}>
+                                <Search size={18} style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: 'var(--text-gray)' }} />
+                                <input value={query} onChange={e => setQuery(e.target.value)} placeholder="Search farmers by name or district..." style={{ width: '100%', padding: '12px 16px 12px 44px', border: '1.5px solid var(--border)', borderRadius: 'var(--radius)', fontSize: 14, outline: 'none', background: 'white' }} />
                             </div>
-                        </div>
-                    )}
 
-                    {/* Search */}
-                    <div style={{ position: 'relative', marginBottom: 16 }}>
-                        <Search size={18} style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: 'var(--text-gray)' }} />
-                        <input value={query} onChange={e => setQuery(e.target.value)} placeholder="Search farmers by name or district..." style={{ width: '100%', padding: '12px 16px 12px 44px', border: '1.5px solid var(--border)', borderRadius: 'var(--radius)', fontSize: 14, outline: 'none', background: 'white' }} />
-                    </div>
+                            {/* District filter */}
+                            <div style={{ display: 'flex', gap: 8, overflowX: 'auto', marginBottom: 16, scrollbarWidth: 'none' }}>
+                                {['all', ...districts].map(d => (
+                                    <button key={d} onClick={() => setDistrict(d)} style={{ padding: '7px 14px', borderRadius: 20, border: `1.5px solid ${district === d ? 'var(--teal)' : 'var(--border)'}`, background: district === d ? 'var(--teal-light)' : 'white', color: district === d ? 'var(--teal)' : 'var(--text-muted)', fontSize: 12, fontWeight: district === d ? 700 : 500, cursor: 'pointer', whiteSpace: 'nowrap' }}>
+                                    {d === 'all' ? 'All Districts' : d}
+                                    </button>
+                                ))}
+                            </div>
 
-                    {/* District filter */}
-                    <div style={{ display: 'flex', gap: 8, overflowX: 'auto', marginBottom: 16, scrollbarWidth: 'none' }}>
-                        {['all', ...districts].map(d => (
-                            <button key={d} onClick={() => setDistrict(d)} style={{ padding: '7px 14px', borderRadius: 20, border: `1.5px solid ${district === d ? 'var(--teal)' : 'var(--border)'}`, background: district === d ? 'var(--teal-light)' : 'white', color: district === d ? 'var(--teal)' : 'var(--text-muted)', fontSize: 12, fontWeight: district === d ? 700 : 500, cursor: 'pointer', whiteSpace: 'nowrap' }}>
-                                {d === 'all' ? 'All Districts' : d}
-                            </button>
-                        ))}
-                    </div>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
+                                <h3 style={{ fontSize: 16 }}>Farmers in Your Area</h3>
+                                <span style={{ fontSize: 13, color: 'var(--text-gray)' }}>{filtered.length} farmer{filtered.length !== 1 ? 's' : ''}</span>
+                            </div>
 
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
-                        <h3 style={{ fontSize: 16 }}>Farmers in Your Area</h3>
-                        <span style={{ fontSize: 13, color: 'var(--text-gray)' }}>{filtered.length} farmer{filtered.length !== 1 ? 's' : ''}</span>
-                    </div>
-
-                    {filtered.length === 0 ? (
-                        <div style={{ textAlign: 'center', padding: '48px 20px', color: 'var(--text-gray)' }}>
-                            <Users size={48} style={{ marginBottom: 12, opacity: 0.4 }} /><h3>No farmers found</h3>
-                        </div>
-                    ) : filtered.map(f => {
+                            {filtered.length === 0 ? (
+                                <div style={{ textAlign: 'center', padding: '48px 20px', color: 'var(--text-gray)' }}>
+                                    <Users size={48} style={{ marginBottom: 12, opacity: 0.4 }} /><h3>No farmers found</h3>
+                                </div>
+                            ) : filtered.map(f => {
                         const nearest = f.farms.filter(fm => fm.days_remaining > 0).sort((a, b) => a.days_remaining - b.days_remaining)[0]
                         return (
                             <div key={f.user_id} style={{ background: 'white', borderRadius: 'var(--radius)', padding: 16, boxShadow: 'var(--shadow)', marginBottom: 12, borderLeft: '4px solid var(--teal)' }}>
@@ -137,6 +195,54 @@ export default function ExtDashboard() {
                             </div>
                         )
                     })}
+                        </>
+                    ) : (
+                        <>
+                            {/* Questions Tab */}
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
+                                <h3 style={{ fontSize: 16 }}>Farmer Questions</h3>
+                                <span style={{ fontSize: 13, color: 'var(--text-gray)' }}>{adviceRequests.length} total</span>
+                            </div>
+
+                            {adviceRequests.length === 0 ? (
+                                <div style={{ textAlign: 'center', padding: '48px 20px', color: 'var(--text-gray)' }}>
+                                    <MessageSquare size={48} style={{ marginBottom: 12, opacity: 0.4 }} />
+                                    <h3>No questions yet</h3>
+                                </div>
+                            ) : (
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                                    {adviceRequests.map(a => (
+                                        <div key={a.advice_id} onClick={() => setSelectedAdvice(a)} style={{
+                                            background: 'white', borderRadius: 'var(--radius)', padding: 16, boxShadow: 'var(--shadow)',
+                                            borderLeft: `4px solid ${a.status === 'answered' ? '#10b981' : '#f59e0b'}`, cursor: 'pointer',
+                                            transition: 'all 0.15s'
+                                        }}
+                                            onMouseEnter={e => e.currentTarget.style.background = '#f9fafb'}
+                                            onMouseLeave={e => e.currentTarget.style.background = 'white'}>
+                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}>
+                                                <div style={{ flex: 1 }}>
+                                                    <div style={{ fontFamily: 'Poppins', fontSize: 14, fontWeight: 600, marginBottom: 2 }}>{a.farmer_name}</div>
+                                                    <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>{a.farmer_phone} • {a.farm_name || 'No farm selected'}</div>
+                                                </div>
+                                                <span style={{
+                                                    padding: '4px 10px', borderRadius: 12, fontSize: 11, fontWeight: 600,
+                                                    background: a.status === 'answered' ? '#d1fae5' : '#fef3c7', color: a.status === 'answered' ? '#10b981' : '#f59e0b'
+                                                }}>
+                                                    {a.status === 'answered' ? 'Answered' : 'Pending'}
+                                                </span>
+                                            </div>
+                                            <div style={{ fontSize: 13, color: 'var(--text-2)', marginBottom: 6, lineHeight: 1.4, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                                                {a.question}
+                                            </div>
+                                            <div style={{ fontSize: 10, color: 'var(--text-muted)' }}>
+                                                {new Date(a.created_at).toLocaleDateString('en-UG', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </>
+                    )}
 
                     <div style={{ textAlign: 'center', paddingTop: 20 }}>
                         <button onClick={handleLogout} style={{ background: 'none', border: '1px solid var(--border)', padding: '10px 24px', borderRadius: 20, color: 'var(--text-muted)', fontSize: 13, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
@@ -145,5 +251,47 @@ export default function ExtDashboard() {
                     </div>
                 </div>
             </div>
+
+            {/* Response Modal */}
+            {selectedAdvice && (
+                <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 50 }}>
+                    <div style={{ background: 'white', borderRadius: 16, maxWidth: 500, width: '90%', padding: 24 }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+                            <h2 style={{ fontSize: 18, fontWeight: 700, color: 'var(--text)' }}>Respond to {selectedAdvice.farmer_name}</h2>
+                            <button onClick={() => setSelectedAdvice(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)' }}>
+                                <X size={20} />
+                            </button>
+                        </div>
+
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 14, marginBottom: 16 }}>
+                            <div style={{ background: 'var(--bg)', borderRadius: 8, padding: 12, borderLeft: '3px solid var(--teal)' }}>
+                                <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)', marginBottom: 4 }}>Question:</div>
+                                <div style={{ fontSize: 13, color: 'var(--text)', lineHeight: 1.5 }}>{selectedAdvice.question}</div>
+                            </div>
+
+                            <div>
+                                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--text)', marginBottom: 8 }}>Your Response</label>
+                                <textarea value={responseText} onChange={e => setResponseText(e.target.value)} placeholder="Provide advice and guidance to help this farmer..." rows={4}
+                                    style={{
+                                        width: '100%', padding: '12px', border: '1.5px solid var(--border)', borderRadius: 8, fontSize: 13, outline: 'none',
+                                        fontFamily: 'inherit', resize: 'vertical', background: 'white', color: 'var(--text)'
+                                    }} />
+                            </div>
+                        </div>
+
+                        <div style={{ display: 'flex', gap: 12 }}>
+                            <button onClick={() => setSelectedAdvice(null)} style={{
+                                flex: 1, padding: '10px', borderRadius: 8, border: '1.5px solid var(--border)', background: 'white',
+                                color: 'var(--text)', fontWeight: 600, fontSize: 13, cursor: 'pointer'
+                            }}>Cancel</button>
+                            <button onClick={handleRespondToAdvice} disabled={submittingResponse} style={{
+                                flex: 1, padding: '10px', borderRadius: 8, border: 'none', background: submittingResponse ? 'var(--border)' : 'var(--teal)',
+                                color: 'white', fontWeight: 600, fontSize: 13, cursor: submittingResponse ? 'not-allowed' : 'pointer'
+                            }}>{submittingResponse ? 'Sending...' : 'Send Response'}</button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     )}
+

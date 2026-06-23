@@ -60,6 +60,7 @@ app.use('/api/farms',       require('./routes/farms'));
 app.use('/api/predictions', require('./routes/predictions'));
 app.use('/api/weather',     require('./routes/weather'));
 app.use('/api/alerts',      require('./routes/alerts'));
+app.use('/api/advice',      require('./routes/advice'));
 
 // Export app for testing
 module.exports = app;

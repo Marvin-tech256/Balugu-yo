@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Wheat, Sprout, Bell, Plus, CloudRain, ArrowRight, TrendingUp, MapPin } from 'lucide-react'
+import { Wheat, Sprout, Bell, Plus, CloudRain, ArrowRight, TrendingUp, MapPin, MessageSquare, X } from 'lucide-react'
 import Layout from '../components/Layout'
 import { useAuth } from '../context/AuthContext'
+import { useToast } from '../components/Toast'
 import api from '../api'
 
 export default function Dashboard() {
   const { user } = useAuth()
   const navigate = useNavigate()
+  const showToast = useToast()
   const [stats, setStats] = useState({ farms: 0, plantings: 0, alerts: 0 })
   const [farms, setFarms] = useState([])
   const [recentAlerts, setRecentAlerts] = useState([])
@@ -15,6 +17,9 @@ export default function Dashboard() {
   const [notifCount, setNotifCount] = useState(0)
   const [selectedFarmId, setSelectedFarmId] = useState(null)
   const [allPredictions, setAllPredictions] = useState([])
+  const [showAdviceModal, setShowAdviceModal] = useState(false)
+  const [adviceForm, setAdviceForm] = useState({ farm_id: '', question: '' })
+  const [submittingAdvice, setSubmittingAdvice] = useState(false)
 
   const hour = new Date().getHours()
   const greet = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening'
@@ -48,6 +53,30 @@ export default function Dashboard() {
     setSelectedFarmId(farm.farm_name)
     const pred = allPredictions.find(p => p.farm_name === farm.farm_name) || null
     setPrediction(pred)
+  }
+
+  async function handleSubmitAdvice() {
+    if (!adviceForm.question.trim()) {
+      showToast('Please enter your question', 'error')
+      return
+    }
+    setSubmittingAdvice(true)
+    try {
+      const res = await api.post('/advice/ask', {
+        farm_id: adviceForm.farm_id ? parseInt(adviceForm.farm_id) : null,
+        question: adviceForm.question.trim(),
+      })
+      if (res.success) {
+        showToast('Your question has been submitted to the extension officer')
+        setAdviceForm({ farm_id: '', question: '' })
+        setShowAdviceModal(false)
+      } else {
+        showToast(res.message || 'Failed to submit', 'error')
+      }
+    } catch (e) {
+      showToast('Error submitting question', 'error')
+    }
+    setSubmittingAdvice(false)
   }
 
   const alertDot = { harvest: 'var(--primary)', weather: 'var(--teal)', warning: 'var(--gold)', system: 'var(--text-muted)' }
@@ -191,12 +220,12 @@ export default function Dashboard() {
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1, background: 'var(--border)' }}>
                 {[
-                  { icon: Sprout, label: 'Add Planting', to: '/add-planting', color: 'var(--primary)', bg: 'var(--primary-bg)' },
-                  { icon: CloudRain, label: 'Weather', to: '/weather', color: 'var(--teal)', bg: 'var(--teal-light)' },
-                  { icon: Wheat, label: 'My Farms', to: '/my-farms', color: 'var(--gold-dark)', bg: 'var(--gold-light)' },
-                  { icon: Bell, label: 'Alerts', to: '/alerts', color: '#7c3aed', bg: '#ede9fe' },
-                ].map(({ icon: Icon, label, to, color, bg }) => (
-                  <button key={to} onClick={() => navigate(to)} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, padding: '14px 8px', background: 'var(--surface)', border: 'none', cursor: 'pointer', transition: 'background 0.15s' }}
+                  { icon: Sprout, label: 'Add Planting', to: '/add-planting', color: 'var(--primary)', bg: 'var(--primary-bg)', action: () => navigate('/add-planting') },
+                  { icon: CloudRain, label: 'Weather', to: '/weather', color: 'var(--teal)', bg: 'var(--teal-light)', action: () => navigate('/weather') },
+                  { icon: Wheat, label: 'My Farms', to: '/my-farms', color: 'var(--gold-dark)', bg: 'var(--gold-light)', action: () => navigate('/my-farms') },
+                  { icon: MessageSquare, label: 'Ask Advice', to: '#', color: '#10b981', bg: '#d1fae5', action: () => setShowAdviceModal(true) },
+                ].map(({ icon: Icon, label, to, color, bg, action }) => (
+                  <button key={label} onClick={action} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, padding: '14px 8px', background: 'var(--surface)', border: 'none', cursor: 'pointer', transition: 'background 0.15s' }}
                     onMouseEnter={e => e.currentTarget.style.background = 'var(--surface-2)'}
                     onMouseLeave={e => e.currentTarget.style.background = 'var(--surface)'}>
                     <div style={{ width: 34, height: 34, borderRadius: 9, background: bg, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -231,6 +260,59 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
+
+      {/* Advice Modal */}
+      {showAdviceModal && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 50 }}>
+          <div style={{ background: 'white', borderRadius: 16, maxWidth: 500, width: '90%', padding: 24 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+              <h2 style={{ fontSize: 18, fontWeight: 700, color: 'var(--text)' }}>Ask Extension Officer</h2>
+              <button onClick={() => setShowAdviceModal(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)' }}>
+                <X size={20} />
+              </button>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+              {/* Farm selection */}
+              <div>
+                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--text)', marginBottom: 8 }}>Farm (optional)</label>
+                <select value={adviceForm.farm_id} onChange={e => setAdviceForm({ ...adviceForm, farm_id: e.target.value })} style={{
+                  width: '100%', padding: '10px 12px', border: '1.5px solid var(--border)', borderRadius: 8, fontSize: 13, outline: 'none',
+                  background: 'white', color: 'var(--text)', cursor: 'pointer'
+                }}>
+                  <option value="">Select a farm</option>
+                  {farms.map(f => (
+                    <option key={f.farm_id} value={f.farm_id}>{f.farm_name}</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Question */}
+              <div>
+                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--text)', marginBottom: 8 }}>Your Question</label>
+                <textarea value={adviceForm.question} onChange={e => setAdviceForm({ ...adviceForm, question: e.target.value })} placeholder="Ask your extension officer for advice about your farm or crops..." rows={4}
+                  style={{
+                    width: '100%', padding: '12px', border: '1.5px solid var(--border)', borderRadius: 8, fontSize: 13, outline: 'none',
+                    fontFamily: 'inherit', resize: 'vertical', background: 'white', color: 'var(--text)'
+                  }} />
+              </div>
+
+              {/* Buttons */}
+              <div style={{ display: 'flex', gap: 12 }}>
+                <button onClick={() => setShowAdviceModal(false)} style={{
+                  flex: 1, padding: '10px', borderRadius: 8, border: '1.5px solid var(--border)', background: 'white',
+                  color: 'var(--text)', fontWeight: 600, fontSize: 13, cursor: 'pointer'
+                }}>Cancel</button>
+                <button onClick={handleSubmitAdvice} disabled={submittingAdvice} style={{
+                  flex: 1, padding: '10px', borderRadius: 8, border: 'none', background: submittingAdvice ? 'var(--border)' : 'var(--primary)',
+                  color: 'white', fontWeight: 600, fontSize: 13, cursor: submittingAdvice ? 'not-allowed' : 'pointer'
+                }}>{submittingAdvice ? 'Submitting...' : 'Submit'}</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </Layout>
   )
 }
+

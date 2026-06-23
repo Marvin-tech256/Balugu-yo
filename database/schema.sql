@@ -91,3 +91,19 @@ CREATE TABLE notifications (
     sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
+
+-- 8. ADVICE REQUESTS TABLE
+CREATE TABLE advice_requests (
+    advice_id INT AUTO_INCREMENT PRIMARY KEY,
+    farmer_id INT NOT NULL,
+    extension_officer_id INT,
+    farm_id INT,
+    question TEXT NOT NULL,
+    response TEXT,
+    status ENUM('pending', 'answered') DEFAULT 'pending',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    answered_at TIMESTAMP,
+    FOREIGN KEY (farmer_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (extension_officer_id) REFERENCES users(user_id) ON DELETE SET NULL,
+    FOREIGN KEY (farm_id) REFERENCES farms(farm_id) ON DELETE SET NULL
+);

@@ -136,8 +136,8 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Bottom row: farms + quick actions + alerts */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+        {/* Bottom row: farms + plantings + quick actions + alerts */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 14 }}>
 
           {/* My Farms */}
           <div style={{ background: 'var(--surface)', borderRadius: 14, border: '1px solid var(--border)', overflow: 'hidden' }}>
@@ -150,7 +150,7 @@ export default function Dashboard() {
             <div style={{ padding: '8px 0' }}>
               {farms.length === 0 ? (
                 <div style={{ padding: '20px 16px', textAlign: 'center', color: 'var(--text-muted)', fontSize: 13 }}>No farms yet</div>
-              ) : farms.slice(0, 3).map(f => (
+              ) : farms.slice(0, 4).map(f => (
                 <div key={f.farm_id} onClick={() => selectFarm(f)} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '9px 16px', borderBottom: '1px solid var(--border)', cursor: 'pointer', background: selectedFarmId === f.farm_name ? 'var(--primary-bg)' : 'transparent', borderLeft: selectedFarmId === f.farm_name ? '3px solid var(--primary)' : '3px solid transparent', transition: 'all 0.15s' }}
                   onMouseEnter={e => { if (selectedFarmId !== f.farm_name) e.currentTarget.style.background = 'var(--surface-2)' }}
                   onMouseLeave={e => { if (selectedFarmId !== f.farm_name) e.currentTarget.style.background = 'transparent' }}>
@@ -172,8 +172,36 @@ export default function Dashboard() {
                 onMouseEnter={e => e.currentTarget.style.background = 'var(--primary-bg)'}
                 onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
                 <Plus size={14} />
-                <span style={{ fontSize: 12, fontWeight: 600 }}>Add new farm</span>
+                <span style={{ fontSize: 12, fontWeight: 600 }}>Add farm</span>
               </div>
+            </div>
+          </div>
+
+          {/* My Plantings */}
+          <div style={{ background: 'var(--surface)', borderRadius: 14, border: '1px solid var(--border)', overflow: 'hidden' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 16px', borderBottom: '1px solid var(--border)' }}>
+              <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text)' }}>My Plantings</span>
+              <button onClick={() => navigate('/add-planting')} style={{ display: 'flex', alignItems: 'center', gap: 4, background: 'none', border: 'none', color: 'var(--primary)', fontSize: 12, fontWeight: 600, cursor: 'pointer' }}>
+                Add <Plus size={11} />
+              </button>
+            </div>
+            <div style={{ padding: '8px 0', maxHeight: 300, overflowY: 'auto' }}>
+              {allPredictions.length === 0 ? (
+                <div style={{ padding: '20px 16px', textAlign: 'center', color: 'var(--text-muted)', fontSize: 13 }}>No plantings yet</div>
+              ) : allPredictions.map(p => (
+                <div key={p.prediction_id} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 16px', borderBottom: '1px solid var(--border)', background: selectedFarmId === p.farm_name ? 'var(--primary-bg)' : 'transparent' }}>
+                  <div style={{ width: 28, height: 28, borderRadius: 6, background: 'var(--teal-light)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <Sprout size={13} color="var(--teal)" />
+                  </div>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontSize: 12, fontWeight: 500, color: 'var(--text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{p.yam_variety}</div>
+                    <div style={{ fontSize: 10, color: 'var(--text-muted)' }}>{p.farm_name}</div>
+                  </div>
+                  <span style={{ fontSize: 10, fontWeight: 600, color: p.days_remaining <= 30 ? 'var(--gold-dark)' : 'var(--teal)', background: p.days_remaining <= 30 ? 'var(--gold-light)' : 'var(--teal-light)', padding: '2px 8px', borderRadius: 20, whiteSpace: 'nowrap' }}>
+                    {p.days_remaining}d
+                  </span>
+                </div>
+              ))}
             </div>
           </div>
 

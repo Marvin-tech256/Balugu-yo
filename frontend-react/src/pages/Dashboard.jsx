@@ -52,6 +52,12 @@ export default function Dashboard() {
 
   const alertDot = { harvest: 'var(--primary)', weather: 'var(--teal)', warning: 'var(--gold)', system: 'var(--text-muted)' }
   const fmtDate = d => d ? new Date(d).toLocaleDateString('en-UG', { day: 'numeric', month: 'short', year: 'numeric' }) : null
+  const calculateDaysSincePlanted = (plantingDate) => {
+    if (!plantingDate) return 0
+    const today = new Date()
+    const planted = new Date(plantingDate)
+    return Math.floor((today - planted) / (1000 * 60 * 60 * 24))
+  }
 
   return (
     <Layout notifCount={notifCount}>
@@ -83,9 +89,9 @@ export default function Dashboard() {
                   </div>
                   <div style={{ display: 'flex', alignItems: 'flex-end', gap: 8, marginBottom: 6 }}>
                     <span style={{ fontFamily: 'Poppins', fontSize: 42, fontWeight: 700, lineHeight: 1 }}>
-                      {prediction.days_remaining > 0 ? prediction.days_remaining : '0'}
+                      {calculateDaysSincePlanted(prediction.planting_date)}
                     </span>
-                    <span style={{ fontSize: 16, color: 'rgba(255,255,255,0.7)', paddingBottom: 6 }}>days away</span>
+                    <span style={{ fontSize: 16, color: 'rgba(255,255,255,0.7)', paddingBottom: 6 }}>days since planted</span>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 14, fontSize: 13, color: 'rgba(255,255,255,0.7)' }}>
                     <MapPin size={12} />
@@ -95,12 +101,11 @@ export default function Dashboard() {
                     Harvest: {fmtDate(prediction.predicted_harvest_date)}
                   </div>
                   <div style={{ background: 'rgba(255,255,255,0.1)', borderRadius: 20, height: 6, marginBottom: 6 }}>
-                    <div style={{ background: 'linear-gradient(90deg, #6ee7b7, #34d399)', borderRadius: 20, height: 6, width: Math.min(Math.round(((270 - prediction.days_remaining) / 270) * 100), 100) + '%', transition: 'width 1s ease' }} />
+                    <div style={{ background: 'linear-gradient(90deg, #6ee7b7, #34d399)', borderRadius: 20, height: 6, width: Math.min(Math.round(((calculateDaysSincePlanted(prediction.planting_date)) / 270) * 100), 100) + '%', transition: 'width 1s ease' }} />
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: 'rgba(255,255,255,0.45)' }}>
                     <span>Planted</span>
-                    <span style={{ color: '#fbbf24', fontWeight: 600 }}>{prediction.confidence_percent}% confidence</span>
-                    <span>Harvest</span>
+                    <span>Harvest ({prediction.days_remaining}d)</span>
                   </div>
                 </div>
               </div>

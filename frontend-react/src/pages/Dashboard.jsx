@@ -75,6 +75,7 @@ export default function Dashboard() {
         showToast('Your question has been submitted to the extension officer')
         setAdviceForm({ farm_id: '', question: '' })
         setShowAdviceModal(false)
+        loadDashboard() // Re-fetch dashboard data
       } else {
         console.error('Advice submission error:', res)
         showToast(res.message || 'Failed to submit question', 'error')

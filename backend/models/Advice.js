@@ -28,8 +28,8 @@ const Advice = {
   // Get advice requests for a specific farmer
   async getByFarmer(farmer_id) {
     const [rows] = await db.execute(`
-      SELECT ar.advice_id, ar.question, ar.response, ar.status, ar.created_at, ar.answered_at,
-             f.farm_name, eo.full_name as officer_name
+      SELECT ar.advice_id, ar.question, ar.response, ar.status, ar.created_at, ar.answered_at, 
+             f.farm_name, eo.full_name as officer_name, eo.phone as officer_phone
       FROM advice_requests ar
       LEFT JOIN farms f ON ar.farm_id = f.farm_id
       LEFT JOIN users eo ON ar.extension_officer_id = eo.user_id
@@ -41,9 +41,14 @@ const Advice = {
 
   // Get a single advice request
   async getById(advice_id) {
-    const [rows] = await db.execute(
-      'SELECT * FROM advice_requests WHERE advice_id = ?',
-      [advice_id]
+    const [rows] = await db.execute(`
+      SELECT ar.*, 
+             u.full_name as farmer_name, u.phone as farmer_phone,
+             eo.full_name as officer_name, eo.phone as officer_phone
+      FROM advice_requests ar
+      JOIN users u ON ar.farmer_id = u.user_id
+      LEFT JOIN users eo ON ar.extension_officer_id = eo.user_id
+      WHERE ar.advice_id = ?`, [advice_id]
     );
     return rows[0] || null;
   },

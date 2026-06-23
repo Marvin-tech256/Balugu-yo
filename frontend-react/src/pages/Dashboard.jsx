@@ -20,6 +20,8 @@ export default function Dashboard() {
   const [showAdviceModal, setShowAdviceModal] = useState(false)
   const [adviceForm, setAdviceForm] = useState({ farm_id: '', question: '' })
   const [submittingAdvice, setSubmittingAdvice] = useState(false)
+  const [myAdvice, setMyAdvice] = useState([])
+  const [showAdviceResponses, setShowAdviceResponses] = useState(false)
 
   const hour = new Date().getHours()
   const greet = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening'
@@ -29,8 +31,8 @@ export default function Dashboard() {
 
   async function loadDashboard() {
     try {
-      const [farmsData, predData, alertData] = await Promise.all([
-        api.get('/farms/my'), api.get('/predictions/my-predictions'), api.get('/alerts/unread'),
+      const [farmsData, predData, alertData, adviceData] = await Promise.all([
+        api.get('/farms/my'), api.get('/predictions/my-predictions'), api.get('/alerts/unread'), api.get('/advice/my'),
       ])
       if (farmsData.success) { setStats(s => ({ ...s, farms: farmsData.count })); setFarms(farmsData.farms || []) }
       if (predData.success) {
@@ -45,6 +47,9 @@ export default function Dashboard() {
         setStats(s => ({ ...s, alerts: alertData.count }))
         setNotifCount(alertData.count)
         setRecentAlerts((alertData.notifications || []).slice(0, 3))
+      }
+      if (adviceData.success) {
+        setMyAdvice(adviceData.advice || [])
       }
     } catch (err) { console.error(err) }
   }
@@ -261,6 +266,39 @@ export default function Dashboard() {
             </div>
           </div>
         </div>
+
+        {/* My Advice */}
+        {myAdvice.length > 0 && (
+          <div style={{ background: 'var(--surface)', borderRadius: 14, border: '1px solid var(--border)', overflow: 'hidden', marginTop: 14 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 16px', borderBottom: '1px solid var(--border)' }}>
+              <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text)' }}>My Advice Requests</span>
+            </div>
+            <div>
+              {myAdvice.slice(0, 3).map(a => (
+                <div key={a.advice_id} style={{ padding: '12px 16px', borderBottom: '1px solid var(--border)' }}>
+                  <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-2)', marginBottom: 6 }}>Q: {a.question}</div>
+                  {a.response ? (
+                    <div style={{ background: 'var(--primary-bg)', borderRadius: 8, padding: '10px 12px', fontSize: 13, color: 'var(--text-2)', lineHeight: 1.6 }}>
+                      <div style={{ fontWeight: 600, color: 'var(--primary-mid)', marginBottom: 4 }}>
+                        A: from {a.officer_name || 'Extension Officer'}
+                      </div>
+                      {a.response}
+                    </div>
+                  ) : (
+                    <div style={{ fontSize: 12, color: 'var(--text-muted)', fontStyle: 'italic' }}>
+                      Waiting for a response from the extension officer...
+                    </div>
+                  )}
+                   <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 8 }}>
+                    Asked on {fmtDate(a.created_at)}
+                    {a.answered_at && ` · Answered on ${fmtDate(a.answered_at)}`}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
       </div>
 
       {/* Advice Modal */}
@@ -317,4 +355,3 @@ export default function Dashboard() {
     </Layout>
   )
 }
-

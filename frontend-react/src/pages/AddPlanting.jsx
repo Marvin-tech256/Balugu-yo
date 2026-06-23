@@ -186,7 +186,7 @@ export default function AddPlanting() {
                                 boxShadow: loading ? 'none' : '0 4px 16px rgba(22,163,74,0.3)',
                                 transition: 'all 0.2s',
                             }}>
-                                {loading ? <><span className="spinner" /> Calculating...</> : <>Calculate Harvest Date <ArrowRight size={16} /></>}
+                                {loading ? <><span className="spinner" /> Adding...</> : <>Add Planting <ArrowRight size={16} /></>}
                             </button>
                         </div>
                     </div>

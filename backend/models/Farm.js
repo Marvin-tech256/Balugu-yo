@@ -43,9 +43,19 @@ const Farm = {
   // Get all farms (extension officer / admin)
   getAll: async () => {
     const [rows] = await db.execute(
-      `SELECT f.*, u.full_name, u.phone, u.district as user_district
+      `SELECT f.*, u.full_name, u.phone, u.district as user_district,
+        p.planting_id, p.planting_date, p.yam_variety, p.status,
+        pr.predicted_harvest_date, pr.confidence_percent,
+        CEIL(DATEDIFF(pr.predicted_harvest_date, CURDATE())) AS days_remaining
        FROM farms f
        JOIN users u ON f.user_id = u.user_id
+       LEFT JOIN plantings p ON p.planting_id = (
+         SELECT p2.planting_id FROM plantings p2
+         WHERE p2.farm_id = f.farm_id
+         ORDER BY p2.planting_date DESC, p2.planting_id DESC
+         LIMIT 1
+       )
+       LEFT JOIN predictions pr ON pr.planting_id = p.planting_id
        ORDER BY f.created_at DESC`
     );
     return rows;

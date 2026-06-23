@@ -88,7 +88,7 @@ export default function Dashboard() {
 
   async function handleDismissAdvice(advice_id) {
     try {
-      const res = await api.delete(`/advice/${advice_id}`);
+      const res = await api.delete(`advice/${advice_id}`);
       if (res.success) {
         showToast('Advice dismissed');
         setMyAdvice(currentAdvice => currentAdvice.filter(a => a.advice_id !== advice_id));

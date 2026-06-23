@@ -86,6 +86,17 @@ export default function Dashboard() {
     setSubmittingAdvice(false)
   }
 
+  async function handleDismissAdvice(advice_id) {
+    try {
+      const res = await api.delete(`/advice/${advice_id}`);
+      if (res.success) {
+        showToast('Advice dismissed');
+        setMyAdvice(currentAdvice => currentAdvice.filter(a => a.advice_id !== advice_id));
+      } else {
+        showToast(res.message || 'Failed to dismiss', 'error');
+      }
+    } catch (e) { showToast('Error dismissing advice', 'error'); }
+  }
   const alertDot = { harvest: 'var(--primary)', weather: 'var(--teal)', warning: 'var(--gold)', system: 'var(--text-muted)' }
   const fmtDate = d => d ? new Date(d).toLocaleDateString('en-UG', { day: 'numeric', month: 'short', year: 'numeric' }) : null
   const calculateDaysSincePlanted = (plantingDate) => {
@@ -289,9 +300,14 @@ export default function Dashboard() {
                       Waiting for a response from the extension officer...
                     </div>
                   )}
-                   <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 8 }}>
-                    Asked on {fmtDate(a.created_at)}
-                    {a.answered_at && ` · Answered on ${fmtDate(a.answered_at)}`}
+                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 8 }}>
+                    <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>
+                      Asked on {fmtDate(a.created_at)}
+                      {a.answered_at && ` · Answered on ${fmtDate(a.answered_at)}`}
+                    </div>
+                    <button onClick={() => handleDismissAdvice(a.advice_id)} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', fontSize: 11, cursor: 'pointer', padding: '2px 4px' }}>
+                      Dismiss
+                    </button>
                   </div>
                 </div>
               ))}

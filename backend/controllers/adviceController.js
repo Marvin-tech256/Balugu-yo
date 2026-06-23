@@ -73,3 +73,20 @@ exports.respondToAdvice = async (req, res) => {
     res.json({ success: false, message: 'Failed to respond to advice' });
   }
 };
+
+exports.deleteMyAdvice = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const farmer_id = req.user.user_id;
+
+    const deleted = await Advice.deleteById(id, farmer_id);
+
+    if (deleted) {
+      res.json({ success: true, message: 'Advice request dismissed' });
+    } else {
+      res.json({ success: false, message: 'Could not dismiss advice. It might have been already removed.' });
+    }
+  } catch (error) {
+    res.json({ success: false, message: 'Failed to dismiss advice' });
+  }
+};

@@ -61,6 +61,15 @@ const Advice = {
     );
     return result.affectedRows > 0;
   },
+
+  // Delete an advice request
+  async deleteById(advice_id, farmer_id) {
+    const [result] = await db.execute(
+      'DELETE FROM advice_requests WHERE advice_id = ? AND farmer_id = ?',
+      [advice_id, farmer_id]
+    );
+    return result.affectedRows > 0;
+  },
 };
 
 module.exports = Advice;

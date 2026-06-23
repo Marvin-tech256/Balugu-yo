@@ -19,7 +19,7 @@ const Advice = {
       FROM advice_requests ar
       JOIN users u ON ar.farmer_id = u.user_id
       LEFT JOIN farms f ON ar.farm_id = f.farm_id
-      WHERE u.district = ? OR ar.status = 'pending'
+      WHERE u.district = ?
       ORDER BY ar.status ASC, ar.created_at DESC
     `, [district]);
     return rows;

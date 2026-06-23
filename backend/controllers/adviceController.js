@@ -36,11 +36,15 @@ exports.getMyAdvice = async (req, res) => {
 exports.getAdviceRequests = async (req, res) => {
   try {
     const district = req.user.district;
+    if (!district) {
+      console.warn('[getAdviceRequests] No district found for user:', req.user.user_id);
+      return res.json({ success: true, requests: [] });
+    }
     const requests = await Advice.getByDistrict(district);
     res.json({ success: true, requests });
   } catch (error) {
-    console.error('[getAdviceRequests]', error);
-    res.json({ success: false, message: 'Failed to fetch requests', requests: [] });
+    console.error('[getAdviceRequests]', error.message, error.stack);
+    res.json({ success: false, message: 'Failed to fetch requests: ' + error.message, requests: [] });
   }
 };
 

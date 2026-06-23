@@ -305,7 +305,7 @@ export default function Dashboard() {
                       Asked on {fmtDate(a.created_at)}
                       {a.answered_at && ` · Answered on ${fmtDate(a.answered_at)}`}
                     </div>
-                    <button onClick={() => handleDismissAdvice(a.advice_id)} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', fontSize: 11, cursor: 'pointer', padding: '2px 4px' }}>
+                    <button onClick={(e) => { e.stopPropagation(); handleDismissAdvice(a.advice_id); }} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', fontSize: 11, cursor: 'pointer', padding: '2px 4px' }}>
                       Dismiss
                     </button>
                   </div>

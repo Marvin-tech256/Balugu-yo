@@ -64,7 +64,7 @@ export default function ExtDashboard() {
             if (res.success) {
                 showToast('Response sent to farmer')
                 setAdviceRequests(adviceRequests.map(a => 
-                    a.advice_id === selectedAdvice.advice_id ? { ...a, status: 'answered', response: responseText } : a
+                    a.advice_id === selectedAdvice.advice_id ? { ...a, status: 'answered', response: responseText.trim() } : a
                 ))
                 setSelectedAdvice(null)
                 setResponseText('')
@@ -294,4 +294,3 @@ export default function ExtDashboard() {
             )}
         </div>
     )}
-

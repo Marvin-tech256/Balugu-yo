@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Wheat, Sprout, Bell, Plus, CloudRain, ArrowRight, TrendingUp, MapPin, MessageSquare, X } from 'lucide-react'
+import { Wheat, Sprout, Bell, Plus, CloudRain, ArrowRight, MapPin, MessageSquare, X } from 'lucide-react'
 import Layout from '../components/Layout'
 import { useAuth } from '../context/AuthContext'
 import { useToast } from '../components/Toast'
@@ -131,10 +131,6 @@ export default function Dashboard() {
                 <div style={{ position: 'absolute', right: -20, top: -20, width: 160, height: 160, borderRadius: '50%', background: 'rgba(255,255,255,0.04)' }} />
                 <div style={{ position: 'absolute', right: 20, bottom: -30, width: 100, height: 100, borderRadius: '50%', background: 'rgba(255,255,255,0.04)' }} />
                 <div style={{ position: 'relative' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 12 }}>
-                    <TrendingUp size={14} color="#6ee7b7" />
-                    <span style={{ fontSize: 11, fontWeight: 600, color: '#6ee7b7', textTransform: 'uppercase', letterSpacing: 0.5 }}>Next Harvest</span>
-                  </div>
                   <div style={{ display: 'flex', alignItems: 'flex-end', gap: 8, marginBottom: 6 }}>
                     <span style={{ fontFamily: 'Poppins', fontSize: 42, fontWeight: 700, lineHeight: 1 }}>
                       {calculateDaysSincePlanted(prediction.planting_date)}
@@ -144,16 +140,6 @@ export default function Dashboard() {
                   <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 14, fontSize: 13, color: 'rgba(255,255,255,0.7)' }}>
                     <MapPin size={12} />
                     {prediction.farm_name} · {prediction.yam_variety}
-                  </div>
-                  <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', marginBottom: 8 }}>
-                    Harvest: {fmtDate(prediction.predicted_harvest_date)}
-                  </div>
-                  <div style={{ background: 'rgba(255,255,255,0.1)', borderRadius: 20, height: 6, marginBottom: 6 }}>
-                    <div style={{ background: 'linear-gradient(90deg, #6ee7b7, #34d399)', borderRadius: 20, height: 6, width: Math.min(Math.round(((calculateDaysSincePlanted(prediction.planting_date)) / 270) * 100), 100) + '%', transition: 'width 1s ease' }} />
-                  </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: 'rgba(255,255,255,0.45)' }}>
-                    <span>Planted</span>
-                    <span>Harvest ({prediction.days_remaining}d)</span>
                   </div>
                 </div>
               </div>

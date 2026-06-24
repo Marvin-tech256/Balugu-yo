@@ -171,7 +171,7 @@ export default function Landing() {
                     </h1>
 
                     <p style={{ fontSize: 'clamp(15px, 2vw, 18px)', color: 'rgba(255,255,255,0.6)', lineHeight: 1.8, marginBottom: 40, maxWidth: 520, margin: '0 auto 40px', animation: 'slideUp 0.7s ease 0.2s both' }}>
-                        Balugu Yo provides useful decisions from qualified extension officers in order for them to make data and informed decisions.
+                        Balugu Yo provides useful decisions from qualified extension officers in order for farmers to make data driven and informed decisions.
                     </p>
 
                     <div style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 56, animation: 'slideUp 0.7s ease 0.3s both' }}>

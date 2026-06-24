@@ -65,12 +65,11 @@ export default function Login() {
                     </div>
 
                     <h2 style={{ fontFamily: 'Poppins', fontSize: 32, fontWeight: 800, color: 'white', lineHeight: 1.2, marginBottom: 16 }}>
-                        Predict your<br />
-                        <span className="hero-gradient-text">harvest date</span><br />
-                        with confidence
+                        Make informed decisions<br />
+                        about your <span className="hero-gradient-text">yams</span>
                     </h2>
                     <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.55)', lineHeight: 1.8, marginBottom: 40, maxWidth: 320 }}>
-                        Join thousands of Ugandan yam farmers using data-driven predictions to plan better harvests.
+                        Balugu Yo provides useful decisions from qualified extension officers in order for them to make data and informed decisions.
                     </p>
 
                     {[

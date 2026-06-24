@@ -93,8 +93,8 @@ export default function ExtDashboard() {
         if (!plantingDate) return null;
         const planted = new Date(plantingDate);
         const today = new Date();
-        const diffTime = Math.abs(today.getTime() - planted.getTime());
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        const diffTime = today.getTime() - planted.getTime();
+        const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
         return diffDays;
     }
 
@@ -149,14 +149,7 @@ export default function ExtDashboard() {
                     {!showAdviceTab ? (
                         <>
                             {/* Farmers Tab */}
-                            {stats.soon > 0 && (
-                                <div style={{ background: '#FFF8E1', border: '1px solid var(--amber)', borderRadius: 'var(--radius)', padding: '14px 16px', display: 'flex', gap: 12, alignItems: 'center', marginBottom: 20 }}>
-                                    <span style={{ fontSize: 24 }}>⚠️</span>
-                                    <div style={{ fontSize: 13, lineHeight: 1.5 }}>
-                                        <strong style={{ color: '#F57F17' }}>{stats.soon} farmer{stats.soon > 1 ? 's' : ''}</strong> have harvests due within 30 days. Consider scheduling field visits.
-                                    </div>
-                                </div>
-                            )}
+
 
                             {/* Search */}
                             <div style={{ position: 'relative', marginBottom: 16 }}>
@@ -193,12 +186,12 @@ export default function ExtDashboard() {
                                         <div style={{ fontFamily: 'Poppins', fontSize: 15, fontWeight: 600, marginBottom: 3 }}>{f.full_name}</div>
                                         <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{f.district || 'Unknown'} • {f.phone}</div>
                                     </div>
-                                    <span style={{ padding: '4px 12px', borderRadius: 20, fontSize: 12, fontWeight: 600, background: f.harvest_soon > 0 ? '#FFF8E1' : '#E8F5E9', color: f.harvest_soon > 0 ? '#F57F17' : 'var(--primary)' }}>
-                                        {f.harvest_soon > 0 ? 'Harvest Soon' : 'Growing'}
+                                    <span style={{ padding: '4px 12px', borderRadius: 20, fontSize: 12, fontWeight: 600, background: '#E8F5E9', color: 'var(--primary)' }}>
+                                        Growing
                                     </span>
                                 </div>
-                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 8, marginBottom: 12 }}>
-                                    {[{ val: f.farms.length, label: 'Farms' }, { val: f.total_acres.toFixed(1), label: 'Acres' }, { val: f.harvest_soon, label: 'Due Soon' }].map(s => (
+                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: 8, marginBottom: 12 }}>
+                                    {[{ val: f.farms.length, label: 'Farms' }, { val: f.total_acres.toFixed(1), label: 'Acres' }].map(s => (
                                         <div key={s.label} style={{ background: 'var(--bg)', borderRadius: 8, padding: 8, textAlign: 'center' }}>
                                             <div style={{ fontFamily: 'Poppins', fontSize: 15, fontWeight: 700, color: 'var(--primary)' }}>{s.val}</div>
                                             <div style={{ fontSize: 10, color: 'var(--text-gray)', marginTop: 2 }}>{s.label}</div>

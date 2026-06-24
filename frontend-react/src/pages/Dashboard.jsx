@@ -1,10 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-<<<<<<< Updated upstream
-import { Wheat, Sprout, Bell, Plus, CloudRain, ArrowRight, MapPin, MessageSquare, X } from 'lucide-react'
-=======
-import { Wheat, Sprout, Bell, Plus, CloudRain, ArrowRight, TrendingUp, MapPin, MessageSquare, X, Lightbulb } from 'lucide-react'
->>>>>>> Stashed changes
+import { Wheat, Sprout, Bell, Plus, CloudRain, ArrowRight, MapPin, MessageSquare, X, Lightbulb } from 'lucide-react'
 import Layout from '../components/Layout'
 import { useAuth } from '../context/AuthContext'
 import { useToast } from '../components/Toast'

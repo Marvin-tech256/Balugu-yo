@@ -132,7 +132,7 @@ const sendTestNotification = async (req, res) => {
     await Notification.create({
       user_id: req.user.user_id,
       title: 'Welcome to Balugu Yo',
-      message: 'Your account is set up successfully. Add your first farm and planting to get your harvest prediction.',
+      message: 'Your account is set up successfully. Add your first farm and planting to get a data driven advice from an extension officer.',
       type: 'system'
     });
 

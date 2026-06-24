@@ -196,7 +196,7 @@ export default function ExtDashboard() {
                                                         <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>{p.farm_name}{p.planting_date ? ` • planted ${new Date(p.planting_date).toLocaleDateString('en-UG', { month: 'short', day: 'numeric', year: 'numeric' })}` : ''}</div>
                                                     </div>
                                                     <span style={{ flexShrink: 0, fontSize: 11, fontWeight: 600, color: p.days_remaining > 0 && p.days_remaining <= 30 ? '#F57F17' : 'var(--teal)' }}>
-                                                        {p.days_remaining > 0 ? `${p.days_remaining}d to harvest` : (p.status === 'harvested' ? 'Harvested' : 'Growing')}
+                                                        {p.days_remaining > 0 ? `${p.days_remaining}d since planted` : (p.status === 'harvested' ? 'Harvested' : 'Growing')}
                                                     </span>
                                                 </div>
                                             ))}
@@ -205,7 +205,7 @@ export default function ExtDashboard() {
                                 )}
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: 10, borderTop: '1px solid var(--border)' }}>
                                     <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--teal)' }}>
-                                        {nearest ? `Next harvest in ${nearest.days_remaining} days` : 'No active planting'}
+                                        {nearest ? `${nearest.days_remaining} days since planted` : 'No active planting'}
                                     </div>
                                     <a href={`tel:${f.phone}`} style={{ padding: '6px 14px', borderRadius: 20, background: 'var(--teal-light)', color: 'var(--teal)', fontSize: 12, fontWeight: 600, border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4, textDecoration: 'none' }}>
                                         <Phone size={12} /> Call

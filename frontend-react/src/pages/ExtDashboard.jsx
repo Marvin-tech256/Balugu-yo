@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Search, Users, Wheat, Sprout, BarChart3, Phone, LogOut, MessageSquare, X } from 'lucide-react'
+import { Search, Users, Wheat, Sprout, BarChart3, Phone, LogOut, MessageSquare, X, ChevronDown, History } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import { useToast } from '../components/Toast'
 import api from '../api'
@@ -19,6 +19,8 @@ export default function ExtDashboard() {
     const [responseText, setResponseText] = useState('')
     const [submittingResponse, setSubmittingResponse] = useState(false)
     const [showAdviceTab, setShowAdviceTab] = useState(false)
+    const [expandedFarmer, setExpandedFarmer] = useState(null)
+    const [expandedFarmerTab, setExpandedFarmerTab] = useState('active')
 
     const handleLogout = () => { logout(); showToast('Logged out'); navigate('/login') }
 
@@ -28,7 +30,7 @@ export default function ExtDashboard() {
             const map = {}
             d.farms.forEach(f => {
                 if (!map[f.user_id]) map[f.user_id] = { user_id: f.user_id, full_name: f.full_name, phone: f.phone, district: f.user_district, farms: [], total_acres: 0, harvest_soon: 0 }
-                map[f.user_id].farms.push(f)
+                if(f.farm_id) { map[f.user_id].farms.push(f); }
                 map[f.user_id].total_acres += parseFloat(f.size_acres || 0)
                 if (f.days_remaining > 0 && f.days_remaining <= 30) map[f.user_id].harvest_soon++
             })
@@ -75,6 +77,25 @@ export default function ExtDashboard() {
             showToast('Error sending response', 'error')
         }
         setSubmittingResponse(false)
+    }
+
+    const toggleFarmer = (userId) => {
+        setExpandedFarmer(prev => prev === userId ? null : userId)
+        if (expandedFarmer !== userId) {
+            // Reset to active tab when opening a new farmer
+            setExpandedFarmerTab('active')
+        }
+    }
+
+    const fmtDate = d => d ? new Date(d).toLocaleDateString('en-UG', { day: 'numeric', month: 'short', year: 'numeric' }) : null
+
+    const calculateDaysSincePlanted = (plantingDate) => {
+        if (!plantingDate) return null;
+        const planted = new Date(plantingDate);
+        const today = new Date();
+        const diffTime = Math.abs(today.getTime() - planted.getTime());
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        return diffDays;
     }
 
     return (
@@ -164,10 +185,11 @@ export default function ExtDashboard() {
                                     <Users size={48} style={{ marginBottom: 12, opacity: 0.4 }} /><h3>No farmers found</h3>
                                 </div>
                             ) : filtered.map(f => {
-                        const nearest = f.farms.filter(fm => fm.days_remaining > 0).sort((a, b) => a.days_remaining - b.days_remaining)[0]
-                        const plantings = f.farms.filter(fm => fm.planting_id)
+                        const mostRecent = f.farms.filter(fm => fm.planting_date).sort((a, b) => new Date(b.planting_date) - new Date(a.planting_date))[0]
+                        const daysSincePlanted = mostRecent ? Math.floor((Date.now() - new Date(mostRecent.planting_date)) / 86400000) : null
+                        const isExpanded = expandedFarmer === f.user_id
                         return (
-                            <div key={f.user_id} style={{ background: 'white', borderRadius: 'var(--radius)', padding: 16, boxShadow: 'var(--shadow)', marginBottom: 12, borderLeft: '4px solid var(--teal)' }}>
+                            <div key={f.user_id} onClick={() => toggleFarmer(f.user_id)} style={{ background: 'white', borderRadius: 'var(--radius)', padding: 16, boxShadow: 'var(--shadow)', marginBottom: 12, borderLeft: '4px solid var(--teal)', cursor: 'pointer' }}>
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 10 }}>
                                     <div>
                                         <div style={{ fontFamily: 'Poppins', fontSize: 15, fontWeight: 600, marginBottom: 3 }}>{f.full_name}</div>
@@ -185,32 +207,62 @@ export default function ExtDashboard() {
                                         </div>
                                     ))}
                                 </div>
-                                {plantings.length > 0 && (
-                                    <div style={{ marginBottom: 12 }}>
-                                        <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-gray)', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 6 }}>Plantings</div>
-                                        <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-                                            {plantings.map(p => (
-                                                <div key={p.planting_id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'var(--bg)', borderRadius: 8, padding: '8px 10px' }}>
-                                                    <div style={{ minWidth: 0 }}>
-                                                        <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>🌱 {p.yam_variety || 'Yam'}</div>
-                                                        <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>{p.farm_name}{p.planting_date ? ` • planted ${new Date(p.planting_date).toLocaleDateString('en-UG', { month: 'short', day: 'numeric', year: 'numeric' })}` : ''}</div>
-                                                    </div>
-                                                    <span style={{ flexShrink: 0, fontSize: 11, fontWeight: 600, color: p.days_remaining > 0 && p.days_remaining <= 30 ? '#F57F17' : 'var(--teal)' }}>
-                                                        {p.days_remaining > 0 ? `${p.days_remaining}d since planted` : (p.status === 'harvested' ? 'Harvested' : 'Growing')}
-                                                    </span>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )}
+
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: 10, borderTop: '1px solid var(--border)' }}>
                                     <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--teal)' }}>
-                                        {nearest ? `${nearest.days_remaining} days since planted` : 'No active planting'}
+                                        {daysSincePlanted !== null ? `${daysSincePlanted} days since planted` : 'No active planting'}
                                     </div>
                                     <a href={`tel:${f.phone}`} style={{ padding: '6px 14px', borderRadius: 20, background: 'var(--teal-light)', color: 'var(--teal)', fontSize: 12, fontWeight: 600, border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4, textDecoration: 'none' }}>
                                         <Phone size={12} /> Call
                                     </a>
                                 </div>
+                                {isExpanded && (
+                                    <div style={{ background: 'var(--bg)', padding: '8px 16px 16px' }}>
+                                        <div style={{ display: 'flex', gap: 4, marginBottom: 12, borderBottom: '1px solid var(--border)' }}>
+                                            {[{ id: 'active', label: 'Active' }, { id: 'history', label: 'History' }].map(t => (
+                                                <button key={t.id} onClick={(e) => { e.stopPropagation(); setExpandedFarmerTab(t.id); }} style={{
+                                                    background: 'none', border: 'none', padding: '6px 10px', fontSize: 12, fontWeight: 600, cursor: 'pointer',
+                                                    color: expandedFarmerTab === t.id ? 'var(--teal)' : 'var(--text-muted)',
+                                                    borderBottom: `2px solid ${expandedFarmerTab === t.id ? 'var(--teal)' : 'transparent'}`,
+                                                    marginBottom: -1
+                                                }}>{t.label}</button>
+                                            ))}
+                                        </div>
+
+                                        {expandedFarmerTab === 'active' && (
+                                            f.farms.filter(farm => farm.planting_date && farm.days_remaining > 0).length === 0 ? (
+                                                <div style={{ fontSize: 12, color: 'var(--text-muted)', textAlign: 'center', padding: '16px 0' }}>No active plantings.</div>
+                                            ) : (
+                                                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                                                    {f.farms.filter(farm => farm.planting_date && farm.days_remaining > 0).map(p => (
+                                                        <div key={p.planting_id} style={{ background: 'white', borderRadius: 8, padding: '10px 12px', border: '1px solid var(--border)' }}>
+                                                            <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text)' }}>{p.farm_name} - {p.yam_variety}</div>
+                                                            <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 2 }}>Planted: {fmtDate(p.planting_date)}</div>
+                                                            <div style={{ fontSize: 11, color: 'var(--primary-mid)', fontWeight: 600, marginTop: 4 }}>{calculateDaysSincePlanted(p.planting_date)}d since planted</div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            )
+                                        )}
+                                        {expandedFarmerTab === 'history' && (
+                                            f.farms.filter(farm => farm.planting_date).length === 0 ? (
+                                                <div style={{ fontSize: 12, color: 'var(--text-muted)', textAlign: 'center', padding: '16px 0' }}>No planting history found.</div>
+                                            ) : (
+                                                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                                                    {f.farms.filter(farm => farm.planting_date).sort((a,b) => new Date(b.planting_date) - new Date(a.planting_date)).map(p => (
+                                                        <div key={p.planting_id} style={{ background: 'white', borderRadius: 8, padding: '10px 12px', border: '1px solid var(--border)', opacity: p.days_remaining > 0 ? 1 : 0.6 }}>
+                                                            <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text)' }}>{p.farm_name} - {p.yam_variety}</div>
+                                                            <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 2 }}>Planted: {fmtDate(p.planting_date)}</div>
+                                                            <div style={{ fontSize: 11, color: p.days_remaining > 0 ? 'var(--primary-mid)' : 'var(--text-muted)', fontWeight: 600, marginTop: 4 }}>
+                                                                {p.days_remaining > 0 ? `Harvest: ${fmtDate(p.predicted_harvest_date)}` : `Harvested around ${fmtDate(p.predicted_harvest_date)}`}
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            )
+                                        )}
+                                    </div>
+                                )}
                             </div>
                         )
                     })}

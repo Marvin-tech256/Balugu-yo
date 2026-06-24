@@ -15,7 +15,7 @@ const FEATURES = [
         color: '#6ee7b7',
         bg: 'rgba(110,231,183,0.12)',
         title: 'Harvest Date Prediction',
-        desc: 'AI-powered predictions tell you exactly when your yams will be ready — down to the day.',
+        desc: 'AI-powered predictions help you make informed decisions about your yams — down to the day.',
     },
     {
         icon: CloudRain,
@@ -166,13 +166,12 @@ export default function Landing() {
                     </div>
 
                     <h1 style={{ fontFamily: 'Poppins', fontSize: 'clamp(36px, 6vw, 68px)', fontWeight: 800, color: 'white', lineHeight: 1.1, marginBottom: 24, animation: 'slideUp 0.7s ease 0.1s both' }}>
-                        Know exactly when<br />
-                        your <span className="hero-gradient-text">yams are ready</span><br />
-                        to harvest
+                        Make informed decisions<br />
+                        about your <span className="hero-gradient-text">yams</span>
                     </h1>
 
                     <p style={{ fontSize: 'clamp(15px, 2vw, 18px)', color: 'rgba(255,255,255,0.6)', lineHeight: 1.8, marginBottom: 40, maxWidth: 520, margin: '0 auto 40px', animation: 'slideUp 0.7s ease 0.2s both' }}>
-                        Balugu Yo uses weather data and AI to predict your climbing yam harvest date with 98% accuracy. Built for Ugandan farmers.
+                        Balugu Yo provides useful decisions from qualified extension officers in order for farmers to make data driven and informed decisions.
                     </p>
 
                     <div style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 56, animation: 'slideUp 0.7s ease 0.3s both' }}>

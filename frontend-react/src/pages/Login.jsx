@@ -71,17 +71,6 @@ export default function Login() {
                     <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.55)', lineHeight: 1.8, marginBottom: 40, maxWidth: 320 }}>
                         Balugu Yo provides useful decisions from qualified extension officers in order for farmers to make data driven and informed decisions.
                     </p>
-
-                    {[
-                        'Harvest date predictions with 98% accuracy',
-                        'Real-time weather data for your district',
-                        'SMS alerts 2 weeks before harvest',
-                    ].map(text => (
-                        <div key={text} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
-                            <CheckCircle size={15} color="#6ee7b7" style={{ flexShrink: 0 }} />
-                            <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.65)' }}>{text}</span>
-                        </div>
-                    ))}
                 </div>
             </div>
 

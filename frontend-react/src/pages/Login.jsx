@@ -69,7 +69,7 @@ export default function Login() {
                         about your <span className="hero-gradient-text">yams</span>
                     </h2>
                     <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.55)', lineHeight: 1.8, marginBottom: 40, maxWidth: 320 }}>
-                        Balugu Yo provides useful decisions from qualified extension officers in order for them to make data and informed decisions.
+                        Balugu Yo provides useful decisions from qualified extension officers in order for farmers to make data driven and informed decisions.
                     </p>
 
                     {[

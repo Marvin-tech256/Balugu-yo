@@ -50,6 +50,10 @@ export default function MyFarms() {
     const totalAcres = allFarms.reduce((s, f) => s + parseFloat(f.size_acres || 0), 0).toFixed(1)
     const harvestSoon = allFarms.filter(f => f.days_remaining && f.days_remaining <= 30 && f.days_remaining > 0).length
     const fmtDate = d => d ? new Date(d).toLocaleDateString('en-UG', { day: 'numeric', month: 'short', year: 'numeric' }) : null
+    const calculateDaysSincePlanted = (plantingDate) => {
+        if (!plantingDate) return 0
+        return Math.floor((new Date() - new Date(plantingDate)) / (1000 * 60 * 60 * 24))
+    }
 
     async function handleAddFarm() {
         if (!form.farm_name.trim()) { showToast('Enter a farm name', 'error'); return }
@@ -155,9 +159,9 @@ export default function MyFarms() {
                                             )}
                                         </div>
 
-                                        <div style={{ fontSize: 12, color: f.predicted_harvest_date ? (soon ? 'var(--gold-dark)' : 'var(--primary-mid)') : 'var(--text-muted)', marginBottom: 12, fontWeight: f.predicted_harvest_date ? 600 : 400 }}>
-                                            {f.predicted_harvest_date
-                                                ? `Harvest: ${fmtDate(f.predicted_harvest_date)} (${f.days_remaining}d)`
+                                        <div style={{ fontSize: 12, color: f.planting_date ? (soon ? 'var(--gold-dark)' : 'var(--primary-mid)') : 'var(--text-muted)', marginBottom: 12, fontWeight: f.planting_date ? 600 : 400 }}>
+                                            {f.planting_date
+                                                ? `${calculateDaysSincePlanted(f.planting_date)} days since planted`
                                                 : 'No planting recorded'}
                                         </div>
 

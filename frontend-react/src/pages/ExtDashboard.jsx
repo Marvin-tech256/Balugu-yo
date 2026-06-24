@@ -164,7 +164,8 @@ export default function ExtDashboard() {
                                     <Users size={48} style={{ marginBottom: 12, opacity: 0.4 }} /><h3>No farmers found</h3>
                                 </div>
                             ) : filtered.map(f => {
-                        const nearest = f.farms.filter(fm => fm.days_remaining > 0).sort((a, b) => a.days_remaining - b.days_remaining)[0]
+                        const mostRecent = f.farms.filter(fm => fm.planting_date).sort((a, b) => new Date(b.planting_date) - new Date(a.planting_date))[0]
+                        const daysSincePlanted = mostRecent ? Math.floor((Date.now() - new Date(mostRecent.planting_date)) / 86400000) : null
                         const plantings = f.farms.filter(fm => fm.planting_id)
                         return (
                             <div key={f.user_id} style={{ background: 'white', borderRadius: 'var(--radius)', padding: 16, boxShadow: 'var(--shadow)', marginBottom: 12, borderLeft: '4px solid var(--teal)' }}>
@@ -195,8 +196,8 @@ export default function ExtDashboard() {
                                                         <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>🌱 {p.yam_variety || 'Yam'}</div>
                                                         <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>{p.farm_name}{p.planting_date ? ` • planted ${new Date(p.planting_date).toLocaleDateString('en-UG', { month: 'short', day: 'numeric', year: 'numeric' })}` : ''}</div>
                                                     </div>
-                                                    <span style={{ flexShrink: 0, fontSize: 11, fontWeight: 600, color: p.days_remaining > 0 && p.days_remaining <= 30 ? '#F57F17' : 'var(--teal)' }}>
-                                                        {p.days_remaining > 0 ? `${p.days_remaining}d to harvest` : (p.status === 'harvested' ? 'Harvested' : 'Growing')}
+                                                    <span style={{ flexShrink: 0, fontSize: 11, fontWeight: 600, color: 'var(--teal)' }}>
+                                                        {p.planting_date ? `${Math.floor((Date.now() - new Date(p.planting_date)) / 86400000)}d since planted` : (p.status === 'harvested' ? 'Harvested' : 'Growing')}
                                                     </span>
                                                 </div>
                                             ))}
@@ -205,7 +206,7 @@ export default function ExtDashboard() {
                                 )}
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: 10, borderTop: '1px solid var(--border)' }}>
                                     <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--teal)' }}>
-                                        {nearest ? `Next harvest in ${nearest.days_remaining} days` : 'No active planting'}
+                                        {daysSincePlanted !== null ? `${daysSincePlanted} days since planted` : 'No active planting'}
                                     </div>
                                     <a href={`tel:${f.phone}`} style={{ padding: '6px 14px', borderRadius: 20, background: 'var(--teal-light)', color: 'var(--teal)', fontSize: 12, fontWeight: 600, border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4, textDecoration: 'none' }}>
                                         <Phone size={12} /> Call

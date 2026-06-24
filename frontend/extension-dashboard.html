@@ -337,24 +337,10 @@
         </div>
       </div>
       <div class="stat-card">
-        <div class="stat-icon-wrap bg-amber">🌾</div>
-        <div class="stat-info">
-          <div class="stat-value" id="harvestingSoon">0</div>
-          <div class="stat-label">Harvesting Soon</div>
-        </div>
-      </div>
-      <div class="stat-card">
         <div class="stat-icon-wrap bg-teal">🌱</div>
         <div class="stat-info">
           <div class="stat-value" id="totalFarms">0</div>
           <div class="stat-label">Total Farms</div>
-        </div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon-wrap bg-blue">📊</div>
-        <div class="stat-info">
-          <div class="stat-value" id="avgAccuracy">87%</div>
-          <div class="stat-label">Avg Accuracy</div>
         </div>
       </div>
     </div>
@@ -560,11 +546,8 @@
                   📞 ${f.phone}
                 </div>
               </div>
-              <span class="badge ${
-                f.harvest_soon > 0
-                  ? 'badge-soon' : 'badge-growing'
-              }">
-                ${f.harvest_soon > 0 ? 'Harvest Soon' : 'Growing'}
+              <span class="badge badge-growing">
+                Growing
               </span>
             </div>
 
@@ -579,10 +562,7 @@
                 </div>
                 <div class="farmer-stat-label">Acres</div>
               </div>
-              <div class="farmer-stat">
-                <div class="farmer-stat-value">${f.harvest_soon}</div>
-                <div class="farmer-stat-label">Due Soon</div>
-              </div>
+
             </div>
 
             <div class="farmer-card-footer">

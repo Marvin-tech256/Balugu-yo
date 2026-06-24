@@ -114,9 +114,7 @@ export default function ExtDashboard() {
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: 10 }}>
                     {[{ icon: <Users size={22} color="var(--primary)" />, val: stats.farmers, label: 'Total Farmers', bg: 'var(--primary-bg)' },
-                    { icon: <Wheat size={22} color="var(--gold)" />, val: stats.soon, label: 'Harvesting Soon', bg: 'var(--gold-light)' },
-                    { icon: <Sprout size={22} color="var(--teal)" />, val: stats.farms, label: 'Total Farms', bg: 'var(--teal-light)' },
-                    { icon: <BarChart3 size={22} color="#7c3aed" />, val: '87%', label: 'Avg Accuracy', bg: '#ede9fe' }].map(s => (
+                    { icon: <Sprout size={22} color="var(--teal)" />, val: stats.farms, label: 'Total Farms', bg: 'var(--teal-light)' }].map(s => (
                         <div key={s.label} style={{ background: 'white', borderRadius: 'var(--radius)', padding: '14px 12px', display: 'flex', alignItems: 'center', gap: 10, boxShadow: 'var(--shadow)', minWidth: 0 }}>
                             <div style={{ width: 40, height: 40, borderRadius: 10, background: s.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>{s.icon}</div>
                             <div style={{ minWidth: 0 }}>
@@ -182,7 +180,7 @@ export default function ExtDashboard() {
 
                             {filtered.length === 0 ? (
                                 <div style={{ textAlign: 'center', padding: '48px 20px', color: 'var(--text-gray)' }}>
-                                    <Users size={48} style={{ marginBottom: 12, opacity: 0.4 }} /><h3>No farmers found</h3>
+                                    <Users size={48} style={{ marginBottom: 12, opacity: 0.4 }} /><h3>No farmers found for this filter.</h3>
                                 </div>
                             ) : filtered.map(f => {
                         const mostRecent = f.farms.filter(fm => fm.planting_date).sort((a, b) => new Date(b.planting_date) - new Date(a.planting_date))[0]

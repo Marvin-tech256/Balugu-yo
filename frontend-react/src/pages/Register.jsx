@@ -118,7 +118,7 @@ export default function Register() {
             <span className="hero-gradient-text">smartest farmers</span>
           </h2>
           <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.55)', lineHeight: 1.8, marginBottom: 40, maxWidth: 300 }}>
-            Register in 3 simple steps and start predicting your yam harvest dates today.
+            Register in 3 simple steps and start receiving data-driven advice.
           </p>
           {STEPS.map(({ icon: Icon, label }, i) => (
             <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 14 }}>

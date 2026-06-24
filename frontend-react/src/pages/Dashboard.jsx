@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+<<<<<<< Updated upstream
 import { Wheat, Sprout, Bell, Plus, CloudRain, ArrowRight, MapPin, MessageSquare, X } from 'lucide-react'
+=======
+import { Wheat, Sprout, Bell, Plus, CloudRain, ArrowRight, TrendingUp, MapPin, MessageSquare, X, Lightbulb } from 'lucide-react'
+>>>>>>> Stashed changes
 import Layout from '../components/Layout'
 import { useAuth } from '../context/AuthContext'
 import { useToast } from '../components/Toast'
@@ -145,11 +149,11 @@ export default function Dashboard() {
               </div>
             ) : (
               <div style={{ background: 'var(--surface)', border: '1.5px dashed var(--border)', borderRadius: 16, padding: '24px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', height: '100%', minHeight: 140 }}>
-                <Sprout size={32} color="var(--primary)" style={{ marginBottom: 10, opacity: 0.7 }} />
-                <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-2)', marginBottom: 4 }}>No active planting</div>
-                <div style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 14 }}>Add a planting to see your harvest prediction</div>
+                <Lightbulb size={28} color="var(--gold)" style={{ marginBottom: 12, opacity: 0.8 }} />
+                <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-2)', marginBottom: 6 }}>Did you know?</div>
+                <div style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 16, maxWidth: '85%', lineHeight: 1.6 }}>The average growth period for climbing yams is 8 to 10 months. Add a planting to get a precise prediction.</div>
                 <button onClick={() => navigate('/add-planting')} style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'var(--primary-bg)', color: 'var(--primary-mid)', border: '1px solid var(--primary-light)', borderRadius: 8, padding: '7px 14px', fontSize: 12, fontWeight: 600, cursor: 'pointer' }}>
-                  <Plus size={13} /> Add Planting
+                  <Plus size={13} /> Record Planting
                 </button>
               </div>
             )}

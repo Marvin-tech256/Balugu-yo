@@ -175,6 +175,14 @@ export default function Dashboard() {
           </div>
         </div>
 
+        {/* Climbing yam growth tip */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12, padding: '12px 16px', marginBottom: 20 }}>
+          <Lightbulb size={20} color="var(--gold)" style={{ flexShrink: 0 }} />
+          <div style={{ fontSize: 13, color: 'var(--text-2)', lineHeight: 1.5 }}>
+            <span style={{ fontWeight: 600 }}>Tip:</span> The average growth period for climbing yams is 8 to 10 months from planting to harvest.
+          </div>
+        </div>
+
         {/* Bottom row: farms + quick actions + alerts */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
 

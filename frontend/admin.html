@@ -159,7 +159,7 @@
     /* Stat cards */
     .stats-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(3, 1fr);
       gap: 16px;
       margin-bottom: 24px;
     }
@@ -434,9 +434,6 @@
       <a onclick="showSection('farms', this)">
         <span class="nav-icon">🌾</span> Farms
       </a>
-      <a onclick="showSection('predictions', this)">
-        <span class="nav-icon">🌿</span> Predictions
-      </a>
       <a onclick="showSection('health', this)">
         <span class="nav-icon">⚙️</span> System Health
       </a>
@@ -493,14 +490,6 @@
             </div>
             <div class="stat-value" id="statFarms">0</div>
             <div class="stat-sub">Across all districts</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-top">
-              <div class="stat-label">Predictions</div>
-              <div class="stat-icon bg-amber">🌿</div>
-            </div>
-            <div class="stat-value" id="statPredictions">0</div>
-            <div class="stat-sub">Generated this season</div>
           </div>
           <div class="stat-card">
             <div class="stat-top">
@@ -618,39 +607,6 @@
         </div>
       </div>
 
-      <!-- PREDICTIONS SECTION -->
-      <div class="admin-section" id="section-predictions">
-        <div class="table-card">
-          <div class="table-header">
-            <h3>🌿 All Predictions</h3>
-            <span id="predsCount">Loading...</span>
-          </div>
-          <div style="overflow-x:auto">
-            <table>
-              <thead>
-                <tr>
-                  <th>Farm</th>
-                  <th>Farmer</th>
-                  <th>Variety</th>
-                  <th>Planted</th>
-                  <th>Harvest Date</th>
-                  <th>Days Left</th>
-                  <th>Confidence</th>
-                </tr>
-              </thead>
-              <tbody id="predsTable">
-                <tr>
-                  <td colspan="7"
-                      style="text-align:center;color:var(--text-gray)">
-                    Loading...
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
       <!-- HEALTH SECTION -->
       <div class="admin-section" id="section-health">
         <div class="health-card">
@@ -725,7 +681,6 @@
     overview: '📊 System Overview',
     users: '👥 All Users',
     farms: '🌾 All Farms',
-    predictions: '🌿 All Predictions',
     health: '⚙️ System Health'
   };
 
@@ -740,7 +695,6 @@
 
     if (name === 'users') loadUsers();
     if (name === 'farms') loadFarmsTable();
-    if (name === 'predictions') loadPredictions();
   }
 
   async function loadAll() {
@@ -760,11 +714,6 @@
         farmers.length;
       document.getElementById('statFarms').textContent =
         farms.length;
-
-      // Predictions count
-      const predsData = await apiCall('/predictions/my-predictions');
-      document.getElementById('statPredictions').textContent =
-        predsData.count || 0;
 
       // Harvest soon
       const soon = farms.filter(f =>
@@ -876,46 +825,6 @@
             </span>
           </td>
         </tr>`).join('');
-  }
-
-  async function loadPredictions() {
-    const data = await apiCall('/farms/all');
-    if (!data.success) return;
-
-    const preds = data.farms.filter(f => f.predicted_harvest_date);
-
-    document.getElementById('predsCount').textContent =
-      `${preds.length} predictions`;
-
-    document.getElementById('predsTable').innerHTML =
-      preds.map(p => {
-        const conf = p.confidence_percent || 85;
-        const confColor = conf >= 85 ? 'var(--primary)'
-          : conf >= 70 ? '#F57F17' : '#C62828';
-        return `
-          <tr>
-            <td><strong>${p.farm_name}</strong></td>
-            <td>${p.full_name}</td>
-            <td>${p.yam_variety || 'Local Balugu'}</td>
-            <td>${p.planting_date || '—'}</td>
-            <td>${p.predicted_harvest_date}</td>
-            <td>
-              <strong style="color:${
-                p.days_remaining > 0
-                  ? 'var(--primary)' : '#C62828'
-              }">
-                ${p.days_remaining > 0
-                  ? p.days_remaining + ' days'
-                  : 'Past due'}
-              </strong>
-            </td>
-            <td>
-              <strong style="color:${confColor}">
-                ${conf}%
-              </strong>
-            </td>
-          </tr>`;
-      }).join('');
   }
 
   loadAll();

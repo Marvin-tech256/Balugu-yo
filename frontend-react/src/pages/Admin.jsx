@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Users, Wheat, Bell, Activity, TrendingUp, Shield, Phone, MapPin, ChevronDown, ChevronUp } from 'lucide-react'
+import { Users, Wheat, Bell, Activity, Shield, Phone, MapPin, ChevronDown, ChevronUp } from 'lucide-react'
 import Layout from '../components/Layout'
 import api from '../api'
 
@@ -10,7 +10,7 @@ const ROLE_BADGE = {
 }
 
 export default function Admin() {
-  const [stats, setStats] = useState({ users: 0, farms: 0, predictions: 0, alerts: 0 })
+  const [stats, setStats] = useState({ users: 0, farms: 0, alerts: 0 })
   const [users, setUsers] = useState([])
   const [showUsers, setShowUsers] = useState(false)
   const [loadingUsers, setLoadingUsers] = useState(false)
@@ -31,7 +31,6 @@ export default function Admin() {
   const cards = [
     { icon: Users, label: 'Total Users', value: stats.users, color: 'var(--primary)', bg: 'var(--primary-bg)' },
     { icon: Wheat, label: 'Total Farms', value: stats.farms, color: 'var(--teal)', bg: 'var(--teal-light)' },
-    { icon: TrendingUp, label: 'Predictions', value: stats.predictions, color: 'var(--gold)', bg: 'var(--gold-light)' },
     { icon: Bell, label: 'Alerts Sent', value: stats.alerts, color: '#7c3aed', bg: '#ede9fe' },
   ]
 
@@ -50,7 +49,7 @@ export default function Admin() {
         </div>
 
         {/* Stat cards */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12, marginBottom: 20 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12, marginBottom: 20 }}>
           {cards.map(({ icon: Icon, label, value, color, bg }) => (
             <div key={label} className="card" style={{ padding: '16px 18px' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>

@@ -198,6 +198,7 @@ export default function ExtDashboard() {
                                         </div>
                                     ))}
                                 </div>
+
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: 10, borderTop: '1px solid var(--border)' }}>
                                     <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--teal)' }}>
                                         {daysSincePlanted !== null ? `${daysSincePlanted} days since planted` : 'No active planting'}
